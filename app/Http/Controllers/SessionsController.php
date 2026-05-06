@@ -1,143 +1,130 @@
 <?php
 
 namespace App\Http\Controllers;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use App\Models\PatientSession;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Carbon\Carbon;
 
-// class SessionsController extends Controller
-// {
+class SessionsController extends Controller
+{
+    public function index()
+    {
+        /** @var \App\Models\Therapist $therapist */
+        $therapist = auth()->guard('therapist')->user();
 
-//     public function show($sessionId)
-//     {
-//         $session = PatientSession::with([  
-//             'patient',
-//             'therapist',
-//             'notes' => function ($q) {
-//                 $q->where('user_id', Auth::id());
-//             }
-//         ])->findOrFail($sessionId);
+        $sessions = PatientSession::query()->where('therapist_id', $therapist->id)->with('patient')->orderByDesc('session_time')->get();
 
-//         $this->authorizeSession($session);  
+        return view('therapist.sessions', compact('sessions'));
+    }
 
-//         $currentUser = Auth::user();
-//         $isPatient   = $currentUser->id === $session->patient_id;
+    /**
+     * Therapist: update session notes.
+     */
+    public function updateNotes(Request $request, PatientSession $session)
+    {
+        /** @var \App\Models\Therapist $therapist */
+        $therapist = auth()->guard('therapist')->user();
 
-//         return view('session', [
-//             'session'     => $session,
-//             'currentUser' => $currentUser,
-//             'isPatient'   => $isPatient,
-//             'therapist'   => $session->therapist,
-//             'patient'     => $session->patient,
-//             'notes'       => $session->notes->query()->first()?->content ?? '-',
-//             'isLive'      => $session->status === 'live',
-//             'duration'    => $session->getDurationFormatted(),
-//         ]);
-//     }
+        if ($session->therapist_id !== $therapist->id) {
+            abort(403);
+        }
 
-//     public function start(Request $request, $sessionId)
-//     {
-//         $session = PatientSession::findOrFail($sessionId);
-//         $this->authorizeSession($session);
+        $request->validate([
+            'notes' => ['required', 'string', 'max:5000'],
+        ]);
 
-//         if ($session->status !== 'pending') {
-//             return response()->json([
-//                 'message' => 'Session already started or ended.'
-//             ], 400);
-//         }
+        $session->update(['notes' => $request->notes]);
 
-//         $session->update([
-//             'status'     => 'live',
-//             'started_at' => Carbon::now(),
-//         ]);
+        return redirect()->back()->with('success', 'Notes updated.');
+    }
 
-//         return response()->json([
-//             'message'    => 'Session started successfully.',
-//             'session_id' => $session->id,
-//             'started_at' => $session->started_at,
-//         ]);
-//     }
+    /**
+     * Therapist: update session status.
+     */
+    public function updateStatus(Request $request, PatientSession $session)
+    {
+        /** @var \App\Models\Therapist $therapist */
+        $therapist = auth()->guard('therapist')->user();
 
-//     public function end(Request $request, $sessionId)
-//     {
-//         $session = PatientSession::findOrFail($sessionId);
-//         $this->authorizeSession($session);
+        if ($session->therapist_id !== $therapist->id) {
+            abort(403);
+        }
 
-//         if ($session->status !== 'live') {
-//             return response()->json([
-//                 'message' => 'Session is not live.'
-//             ], 400);
-//         }
+        $request->validate([
+            'status' => ['required', 'in:pending,scheduled,completed,canceled,rescheduled'],
+        ]);
 
-//         $session->update([
-//             'status'   => 'ended',
-//             'ended_at' => Carbon::now(),
-//         ]);
+        $session->update(['status' => $request->status]);
 
-//         return response()->json([
-//             'message'  => 'Session ended.',
-//             'ended_at' => $session->ended_at,
-//         ]);
-//     }
+        return redirect()->back()->with('success', 'Session status updated.');
+    }
 
+    /**
+     * Patient: waiting room for a session.
+     */
+    public function waitingRoom(PatientSession $session)
+    {
+        /** @var \App\Models\Patient $patient */
+        $patient = auth()->guard('patient')->user();
 
-//     public function sendMessage(Request $request, $sessionId)
-//     {
-//         $request->validate([
-//             'message' => 'required|string|max:1000',
-//         ]);
+        if ($session->patient_id !== $patient->id) {
+            abort(403);
+        }
 
-//         $session = PatientSession::findOrFail($sessionId);
-//         $this->authorizeSession($session);
+        $session->load('therapist');
 
-//         $chatMessage = $session->chatMessages()->create([
-//             'user_id' => Auth::id(),
-//             'message' => $request->input('message'),
-//             'sent_at' => Carbon::now(),
-//         ]);
+        return view('patient.waiting-room', compact('session'));
+    }
+    public function sendMessage(Request $request, $sessionId)
+    {
+        $request->validate([
+            'message' => 'required|string|max:1000',
+        ]);
 
-//         return response()->json([
-//             'message' => 'Message sent.',
-//             'chat'    => $chatMessage->load('user'),
-//         ]);
-//     }
+        $session = PatientSession::findOrFail($sessionId);
+        $this->authorizeSession($session);
+        $chatMessage = $session->chatMessages()->create([
+            'user_id' => Auth::id(),
+            'message' => $request->input('message'),
+            'sent_at' => Carbon::now(),
+        ]);
 
-//     public function getMessages($sessionId)
-//     {
-//         $session = PatientSession::findOrFail($sessionId);
-//         $this->authorizeSession($session);
+        return response()->json([
+            'message' => 'Message sent.',
+            'chat' => $chatMessage->load('user'),
+        ]);
+    }
+    public function getMessages($sessionId)
+    {
+        $session = PatientSession::findOrFail($sessionId);
+        $this->authorizeSession($session);
 
-//         $messages = $session->chatMessages()
-//                             ->with('user')
-//                             ->orderBy('sent_at', 'asc')
-//                             ->get();
+        $messages = $session->chatMessages()->with('user')->orderBy('sent_at', 'asc')->get();
 
-//         return response()->json(['messages' => $messages]);
-//     }
+        return response()->json(['messages' => $messages]);
+    }
 
-//     public function toggleMute(Request $request, $sessionId)
-//     {
-//         $session = PatientSession::findOrFail($sessionId);
-//         $this->authorizeSession($session);
+    public function toggleMute(Request $request, $sessionId)
+    {
+        $session = PatientSession::findOrFail($sessionId);
+        $this->authorizeSession($session);
 
-//         $participant = $session->participants()
-//                                ->where('user_id', Auth::id())
-//                                ->firstOrFail();
+        $participant = $session->participants()->where('user_id', Auth::id())->firstOrFail();
 
-//         $participant->update(['is_muted' => !$participant->is_muted]);
+        $participant->update(['is_muted' => !$participant->is_muted]);
 
-//         return response()->json([
-//             'is_muted' => $participant->is_muted,
-//         ]);
-//     }
+        return response()->json([
+            'is_muted' => $participant->is_muted,
+        ]);
+    }
 
-//     private function authorizeSession(PatientSession $session): void
-//     {
-//         $userId = Auth::id();
+    private function authorizeSession(PatientSession $session): void
+    {
+        $userId = Auth::id();
 
-//         if ($session->patient_id !== $userId && $session->therapist_id !== $userId) {
-//             abort(403, 'Unauthorized access to this session.');
-//         }
-//     }
-// }
+        if ($session->patient_id !== $userId && $session->therapist_id !== $userId) {
+            abort(403, 'Unauthorized access to this session.');
+        }
+    }
+}

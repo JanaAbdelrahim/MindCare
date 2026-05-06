@@ -16,9 +16,6 @@ use App\Http\Controllers\ComplaintsController;
 use App\Http\Controllers\ReportsController;
 use App\Http\Controllers\AvailabilitySlotsController;
 
-// ─────────────────────────────────────────────────
-// PUBLIC
-// ─────────────────────────────────────────────────
 Route::get('/', fn() => view('home'))->name('home');
 
 Route::get('/auth/login',     [AuthController::class, 'showLogin'])->name('login');
@@ -27,9 +24,7 @@ Route::get('/auth/register',  [AuthController::class, 'showRegister'])->name('re
 Route::post('/auth/register', [AuthController::class, 'register']);
 Route::post('/auth/logout',   [AuthController::class, 'logout'])->name('logout');
 
-// ─────────────────────────────────────────────────
-// PATIENT
-// ─────────────────────────────────────────────────
+
 Route::middleware(['auth.patient'])->prefix('patient')->name('patient.')->group(function () {
 
     // Profile

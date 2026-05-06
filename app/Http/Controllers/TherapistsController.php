@@ -150,7 +150,7 @@ class TherapistsController extends Controller
     {
         $patients   = Patient::query()->with('sessions')->latest()->get();
         $therapists = Therapist::query()->with('sessions')->latest()->get();
-        return view('admin.manageUsers', compact('patients', 'therapists'));
+        return view('admin.users', compact('patients', 'therapists'));
     }
 
     public function store(Request $request)

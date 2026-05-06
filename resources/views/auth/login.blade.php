@@ -5,7 +5,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Mind Care – Sign In</title>
-
+    <link rel="stylesheet" href="{{ asset('assets/CSS/plugins/bootstrap.min.css') }}" />
     <link href="{{ asset('assets/CSS/login.css') }}" rel="stylesheet" />
 </head>
 
@@ -79,7 +79,7 @@
 
         </div>
     </div>
-
+    <script src="{{ asset('assets/JS/plugins/bootstrap.min.js') }}"></script>
     <script>
         function flip(toBack) {
             document.getElementById('flip').classList.toggle('flipped', toBack);
