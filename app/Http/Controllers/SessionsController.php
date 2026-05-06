@@ -8,30 +8,31 @@ use Carbon\Carbon;
 
 class SessionsController extends Controller
 {
+
     public function show($sessionId)
     {
-        $session = PatientSession::with([
+        $session = PatientSession::with([  
             'patient',
             'therapist',
             'notes' => function ($q) {
                 $q->where('user_id', Auth::id());
-            },
+            }
         ])->findOrFail($sessionId);
 
-        $this->authorizeSession($session);
+        $this->authorizeSession($session);  
 
         $currentUser = Auth::user();
-        $isPatient = $currentUser->id === $session->patient_id;
+        $isPatient   = $currentUser->id === $session->patient_id;
 
-        return view('sessions', [
-            'session' => $session,
+        return view('session', [
+            'session'     => $session,
             'currentUser' => $currentUser,
-            'isPatient' => $isPatient,
-            'therapist' => $session->therapist,
-            'patient' => $session->patient,
-            'notes' => $session->notes->first()?->content ?? '-',
-            'isLive' => $session->status === 'live',
-            'duration' => $session->getDurationFormatted(),
+            'isPatient'   => $isPatient,
+            'therapist'   => $session->therapist,
+            'patient'     => $session->patient,
+            'notes'       => $session->notes->first()?->content ?? '-',
+            'isLive'      => $session->status === 'live',
+            'duration'    => $session->getDurationFormatted(),
         ]);
     }
 
@@ -41,21 +42,18 @@ class SessionsController extends Controller
         $this->authorizeSession($session);
 
         if ($session->status !== 'pending') {
-            return response()->json(
-                [
-                    'message' => 'Session already started or ended.',
-                ],
-                400,
-            );
+            return response()->json([
+                'message' => 'Session already started or ended.'
+            ], 400);
         }
 
         $session->update([
-            'status' => 'live',
+            'status'     => 'live',
             'started_at' => Carbon::now(),
         ]);
 
         return response()->json([
-            'message' => 'Session started successfully.',
+            'message'    => 'Session started successfully.',
             'session_id' => $session->id,
             'started_at' => $session->started_at,
         ]);
@@ -67,24 +65,22 @@ class SessionsController extends Controller
         $this->authorizeSession($session);
 
         if ($session->status !== 'live') {
-            return response()->json(
-                [
-                    'message' => 'Session is not live.',
-                ],
-                400,
-            );
+            return response()->json([
+                'message' => 'Session is not live.'
+            ], 400);
         }
 
         $session->update([
-            'status' => 'ended',
+            'status'   => 'ended',
             'ended_at' => Carbon::now(),
         ]);
 
         return response()->json([
-            'message' => 'Session ended.',
+            'message'  => 'Session ended.',
             'ended_at' => $session->ended_at,
         ]);
     }
+
 
     public function sendMessage(Request $request, $sessionId)
     {
@@ -103,7 +99,7 @@ class SessionsController extends Controller
 
         return response()->json([
             'message' => 'Message sent.',
-            'chat' => $chatMessage->load('user'),
+            'chat'    => $chatMessage->load('user'),
         ]);
     }
 
@@ -112,7 +108,10 @@ class SessionsController extends Controller
         $session = PatientSession::findOrFail($sessionId);
         $this->authorizeSession($session);
 
-        $messages = $session->chatMessages()->with('user')->orderBy('sent_at', 'asc')->get();
+        $messages = $session->chatMessages()
+                            ->with('user')
+                            ->orderBy('sent_at', 'asc')
+                            ->get();
 
         return response()->json(['messages' => $messages]);
     }
@@ -122,7 +121,9 @@ class SessionsController extends Controller
         $session = PatientSession::findOrFail($sessionId);
         $this->authorizeSession($session);
 
-        $participant = $session->participants()->where('user_id', Auth::id())->firstOrFail();
+        $participant = $session->participants()
+                               ->where('user_id', Auth::id())
+                               ->firstOrFail();
 
         $participant->update(['is_muted' => !$participant->is_muted]);
 
