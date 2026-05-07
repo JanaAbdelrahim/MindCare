@@ -1,15 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mind Care</title>
+    <title>MindCare</title>
 
     <link rel="stylesheet" href="{{ asset('assets/CSS/plugins/all.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/CSS/plugins/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/CSS/plugins/fonts.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/CSS/style.css') }}">
 </head>
+
 <body>
 
 
@@ -103,4 +105,5 @@
     <script src="{{ asset('assets/JS/global.js') }}"></script>
 
 </body>
+
 </html>

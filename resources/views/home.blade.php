@@ -5,20 +5,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MindCare</title>
+
     <link rel="stylesheet" href="{{ asset('assets/CSS/plugins/all.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/CSS/plugins/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/CSS/plugins/fonts.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/CSS/plugins/aos.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/CSS/global.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/CSS/keyframes.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/CSS/home.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/CSS/home.responsive.css') }}">
 </head>
 
 <body>
-    <div id="loader">
-        <img src="{{ asset('assets/Images/loader.png') }}" class="loader-img" alt="loading">
-    </div>
+
     <nav id="mainNav" class="navbar navbar-expand-lg">
         <div class="container">
 
@@ -42,6 +39,7 @@
 
         </div>
     </nav>
+
     <header id="home">
         <div class="slider d-block w-100r" id="slider d-block w-100">
             <div class="indicators">
@@ -51,9 +49,12 @@
             </div>
             <div class="inner">
                 <div class="item">
-                    <img src="{{ asset('assets/Images/imgf.jpg') }}" data-index="0" class="slide d-block w-100" alt="">
-                    <img src="{{ asset('assets/Images/imgs.jpg') }}" data-index="1" class="slide d-block w-100" alt="">
-                    <img src="{{ asset('assets/Images/imgt.jpg') }}" data-index="2" class="slide d-block w-100" alt="">
+                    <img src="{{ asset('assets/Images/imgf.jpg') }}" data-index="0" class="slide d-block w-100"
+                        alt="">
+                    <img src="{{ asset('assets/Images/imgs.jpg') }}" data-index="1" class="slide d-block w-100"
+                        alt="">
+                    <img src="{{ asset('assets/Images/imgt.jpg') }}" data-index="2" class="slide d-block w-100"
+                        alt="">
                     <div class="caption">
                         <h1>Healing Begins With
                             <br>
@@ -67,6 +68,7 @@
             </div>
         </div>
     </header>
+
     <section id="about" class="animate">
         <div class="container">
             <div class="row">
@@ -122,36 +124,29 @@
                 </div>
             </div>
         </div>
-
     </section>
+
     <section id="counter">
         <div class="stats row">
             <div class="stat col-lg-3 col-6">
-                <h2 class="counter" data-target="5000">0
-                    <span>+k</span>
-                </h2>
+                <h2 class="counter" data-target="5000">0</h2>
                 <p>Happy Users</p>
             </div>
             <div class="stat col-lg-3 col-6">
-                <h2 class="counter" data-target="120">0
-                    <span>+k</span>
-                </h2>
+                <h2 class="counter" data-target="120">0</h2>
                 <p>Therapists</p>
             </div>
             <div class="stat col-lg-3 col-6">
-                <h2 class="counter" data-target="98">0
-                    <span>+k</span>
-                </h2>
+                <h2 class="counter" data-target="98">0</h2>
                 <p>% Positive Reviews</p>
             </div>
             <div class="stat col-lg-3 col-6">
-                <h2 class="counter" data-target="8">0
-                    <span>+k</span>
-                </h2>
+                <h2 class="counter" data-target="8">0</h2>
                 <p>Years of Care</p>
             </div>
         </div>
     </section>
+
     <section id="services">
         <div class="one" data-aos="fade-right">
             <h5>What We Offer</h5>
@@ -197,6 +192,7 @@
             </div>
         </div>
     </section>
+
     <section class="faq">
         <div class="container">
             <div class="row">
@@ -269,7 +265,7 @@
 
     <footer class="footer-bottom">
         <div class="container">
-            <h2><a href="#">MindCare</a></h2>
+            <h2><a href="#">mind<span>Care</span></a></h2>
             <p class="normal">
                 © 2026 MindCare. All rights reserved.
             </p>
@@ -282,8 +278,15 @@
 
         </div>
     </footer>
+
+    <div class="loadingPage">
+        <div class="loader"></div>
+    </div>
+
     <script src="{{ asset('assets/JS/plugins/bootstrap.min.js') }}"></script>
     <script src="{{ asset('assets/JS/plugins/aos.js') }}"></script>
+    <script src="{{ asset('assets/JS/plugins/jQuery.js') }}"></script>
+    <script src="{{ asset('assets/JS/global.js') }}"></script>
     <script src="{{ asset('assets/JS/functions.js') }}"></script>
     <script src="{{ asset('assets/JS/home.js') }}"></script>
 </body>

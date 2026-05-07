@@ -9,20 +9,6 @@ const counters = document.querySelectorAll(".counter");
 const section = document.getElementById("counter");
 
 
-window.addEventListener("load", () => {
-  const loader = document.getElementById("loader");
-
-  setTimeout(() => {
-    loader.style.opacity = "0";
-
-    setTimeout(() => {
-      loader.style.display = "none";
-    }, 5000);
-
-  }, 3000);
-});
-
-
 dots.forEach(function (dot) {
   dot.addEventListener("click", function () {
     let index = +(this.dataset.index);
@@ -105,7 +91,7 @@ document.addEventListener("DOMContentLoaded", () => {
           counter.innerText = Math.ceil(count);
           requestAnimationFrame(update);
         } else {
-          counter.innerText = target;
+          counter.innerText = `${target}+`;
         }
       }
 

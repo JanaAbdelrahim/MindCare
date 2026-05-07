@@ -1,0 +1,170 @@
+* { 
+     margin: 0;
+     padding: 0; 
+}
+body {
+     
+     background: #f8efe5!important;
+     color: #5D768B !important; 
+}
+
+
+.back-btn {
+     background: #FDFCFA;
+     border: 1px solid #5D768B;
+     border-radius: 10px; 
+     padding: 3px 10px; 
+     font-size: 13px; 
+     cursor: pointer;
+     color: #5D768B;
+     transition-duration: .5s;
+     margin-bottom: 30px; 
+}
+.back-btn:hover{ 
+     background: #5D768B;
+     color: #FDFCFA;
+}
+.doctor-card { 
+     background: #FDFCFA; 
+     border-radius: 12px; 
+     padding: 15px; 
+     display: flex; 
+     gap: 30px; 
+     align-items: center; 
+     margin-bottom: 30px;
+     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+.doc-avatar { 
+     width: 80px; 
+     height: 80px; 
+     border-radius: 100%; 
+     background: #B3C8CF; 
+     display: flex; 
+     align-items: center; 
+     justify-content: center; 
+     font-size: 28px; 
+     font-weight: 500; 
+     color: #5D768B;
+     flex-shrink: 0; 
+}
+.doc-info h2 { 
+     font-size: 20px; 
+     font-weight: 500; 
+     margin-bottom: 4px; 
+}
+.doc-info p { 
+     font-size: 14px; 
+     color: #666; 
+     margin-bottom: 8px; 
+}
+.price-badge { 
+     display: inline-block; 
+     background: #B3C8CF; 
+     font-size: 13px; 
+     font-weight: 500; 
+     padding: 4px 12px; 
+     border-radius: 8px;
+}
+.schedule-card p { 
+     font-size: 12px; 
+     font-weight: 500; 
+     color: #888; 
+     text-transform: uppercase; 
+     letter-spacing: 1px; 
+     margin-bottom: 13px; 
+}
+.schedule-card { 
+     background: #FDFCFA; 
+     border-radius: 12px; 
+     padding: 16px;
+     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+}
+.schedule-card h3 { 
+     font-size: 16px; 
+     font-weight: 500; 
+     margin-bottom: 13px; 
+}
+.slots{ 
+     display: grid; 
+     grid-template-columns: 1fr 1fr; 
+     gap: 6px; 
+}
+.slot { 
+     padding: 6px 10px; 
+     border-radius: 8px; 
+     font-size: 13px; 
+     text-align: center; 
+}
+.slot.static { 
+     background: #f5f5f3; 
+     color: #888; 
+     border: 1px solid #e8e8e8; 
+}
+.slot.available { 
+     background: #B3C8CF; 
+      border: 1px solid #acbfcf; 
+     cursor: pointer;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);  
+     
+}
+.slot.available:hover { 
+     background: #c5d9e0; 
+}
+.slot.selected { 
+    background: #c5d9e0; 
+    color: black;
+     
+}
+.selected-info { 
+     background: #f9f9f9; 
+     border: 1px solid #e8e8e8; 
+     border-radius: 12px; 
+     padding: 16px 20px; 
+     margin-bottom: 16px; 
+     display: flex; 
+     align-items: center; 
+     justify-content: space-between;
+     margin-top: 15px; 
+}
+.selected-info .label { 
+     font-size: 13px; 
+     margin-bottom: 2px; 
+}
+.selected-info .value { 
+     font-size: 15px; 
+     font-weight: 500;
+}
+
+.proceed-btn { 
+     margin-top: 15px;
+     width: 100%; 
+     padding: 12px; 
+    background: #B3C8CF;
+    color: #5D768B;  
+     border: none; 
+     border-radius: 8px; 
+     font-size: 15px; 
+     font-weight: 500; 
+     cursor: pointer; 
+}
+.proceed-btn:hover {
+     background: #c5d9e0;
+}
+.proceed-btn:disabled { 
+     background: #f1ecec; 
+     color: #aaa; 
+     cursor: not-allowed; 
+}
+@media (min-width: 320px) and (max-width: 992px){}
+@media (min-width: 371px) and (max-width: 992px){}
+@media (min-width: 577px) and (max-width: 992px){}
+@media (min-width: 769px) and (max-width: 992px){
+     
+}
+@media (min-width: 992px) and (max-width: 1300px){
+     .page { 
+          margin: 0 80PX auto; 
+          padding: 30PX 30PX; 
+     }
+}
+@media (min-width: 1181px) and (max-width: 1300px){}

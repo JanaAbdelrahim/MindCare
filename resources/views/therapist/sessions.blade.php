@@ -4,13 +4,15 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Live Session</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="{{ asset('assets/CSS/session-therapist.css') }}" />
+    <title>MindCare</title>
+    <link rel="stylesheet" href="{{ asset('assets/CSS/plugins/bootstrap.min.css') }}" />
+    <link rel="stylesheet" href="{{ asset('assets/CSS/plugins/fonts.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/CSS/global.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/CSS/session.css') }}" />
 </head>
 
 <body>
-    
+
 
 
     <header class="hdr">
@@ -150,6 +152,13 @@
 
     </div>
 
+    <div class="loadingPage">
+        <div class="loader"></div>
+    </div>
+
+    <script src="{{ asset('assets/JS/plugins/bootstrap.min.js') }}"></script>
+    <script src="{{ asset('assets/JS/plugins/jQuery.js') }}"></script>
+    <script src="{{ asset('assets/JS/global.js') }}"></script>
     <script>
         var start = Date.now();
 

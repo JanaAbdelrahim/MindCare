@@ -7,14 +7,6 @@ body {
   flex-direction: column;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-    font-family: "lora", serif;
-}
 .hdr {
   background: var(--surface);
   border-bottom: 1px solid var(--border);
@@ -379,8 +371,6 @@ h6 {
   border-radius: 11px;
   border-bottom-right-radius: 3px;
 }
-
-
 
 .chat-footer {
   border-top: 1px solid var(--border);

@@ -1,16 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mind Care</title>
+    <title>MindCare</title>
 
-    <link rel="stylesheet" href="{{ asset('assets/CSS/plugins/all.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/CSS/plugins/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/CSS/plugins/swiper.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/CSS/plugins/fonts.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/CSS/style.css') }}">
 </head>
+
 <body>
 
     <div class="intakeForm">
@@ -28,7 +29,8 @@
             <div class="box">
                 <div class="swiper">
                     <div class="swiper-wrapper">
-                        <div class="swiper-slide" data-category="Stress" data-category-index="1" data-category-total="6">
+                        <div class="swiper-slide" data-category="Stress" data-category-index="1"
+                            data-category-total="6">
                             <div class="question d-flex align-items-center justify-content-between">
                                 <h5 class="">How often do you feel stressed?</h5>
                                 <span class="category">STRESS</span>
@@ -48,7 +50,8 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="swiper-slide" data-category="Stress" data-category-index="2" data-category-total="6">
+                        <div class="swiper-slide" data-category="Stress" data-category-index="2"
+                            data-category-total="6">
                             <div class="question d-flex align-items-center justify-content-between">
                                 <h5 class="">How difficult is it for you to relax after a stressful day?</h5>
                                 <span class="category">STRESS</span>
@@ -85,8 +88,9 @@
     <script src="{{ asset('assets/JS/bootstrap.min.js') }}"></script>
     <script src="{{ asset('assets/JS/jQuery.js') }}"></script>
     <script src="{{ asset('assets/JS/plugins/swiper.min.js') }}"></script>
-    <script src="{{ asset('assets/JS/intakeform.js') }}"></script>
     <script src="{{ asset('assets/JS/global.js') }}"></script>
+    <script src="{{ asset('assets/JS/intakeform.js') }}"></script>
 
 </body>
+
 </html>

@@ -1,15 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mind Care</title>
+    <title>MindCare</title>
 
     <link rel="stylesheet" href="{{ asset('assets/CSS/plugins/all.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/CSS/plugins/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/CSS/plugins/fonts.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/CSS/style.css') }}">
 </head>
+
 <body>
 
     <div class="profile my-5 pt-5">
@@ -24,15 +26,18 @@
                             <form>
                                 <div class="mt-3">
                                     <label for="FullName" class="input-label text-start mb-2">Full Name</label>
-                                    <input type="text" name="fullName" id="FullName" class="form-control" value="Maryam Mostafa">
+                                    <input type="text" name="fullName" id="FullName" class="form-control"
+                                        value="Maryam Mostafa">
                                 </div>
                                 <div class="mt-3">
                                     <label for="Email" class="input-label text-start mb-2">Email</label>
-                                    <input type="email" name="email" id="Email" class="form-control" value="maryam@gmail.com">
+                                    <input type="email" name="email" id="Email" class="form-control"
+                                        value="maryam@gmail.com">
                                 </div>
                                 <div class="mt-3">
                                     <label for="Password" class="input-label text-start mb-2">Password</label>
-                                    <input type="password" name="password" id="Password" class="form-control" value="12345678">
+                                    <input type="password" name="password" id="Password" class="form-control"
+                                        value="12345678">
                                 </div>
                                 <div class="mt-4 btns">
                                     <button type="submit" class="btn w-100">Edit</button>
@@ -115,8 +120,10 @@
     </div>
 
     <script src="{{ asset('assets/JS/plugins/bootstrap.min.js') }}"></script>
+    <script src="{{ asset('assets/JS/plugins/jQuery.js') }}"></script>
     <script src="{{ asset('assets/JS/global.js') }}"></script>
 
 
 </body>
+
 </html>

@@ -4,8 +4,10 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>My Patients</title>
+    <title>MindCare</title>
     <link rel="stylesheet" href="{{ asset('assets/CSS/plugins/bootstrap.min.css') }}" />
+    <link rel="stylesheet" href="{{ asset('assets/CSS/plugins/fonts.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/CSS/global.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/CSS/patient-management.css') }}" />
 </head>
 
@@ -39,7 +41,14 @@
             </div>
         </div>
     </div>
+
+    <div class="loadingPage">
+        <div class="loader"></div>
+    </div>
+
     <script src="{{ asset('assets/JS/plugins/bootstrap.min.js') }}"></script>
+    <script src="{{ asset('assets/JS/plugins/jQuery.js') }}"></script>
+    <script src="{{ asset('assets/JS/global.js') }}"></script>
     <script src="{{ asset('assets/JS/patient-management.js') }}"></script>
 
 </body>

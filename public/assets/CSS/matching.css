@@ -1,0 +1,366 @@
+/* ─────────────────────────────────────────────────
+   CSS VARIABLES
+───────────────────────────────────────────────── */
+:root {
+  --bg:          #f8efe5;
+  --surface:     #FDFCFA;
+  --surface-2:   #faf9f7;
+  --border:      #e8e4de;
+  --text-primary:#5D768B;
+  --text-secondary:#6b6560;
+  --text-muted:  #8a7e76;
+  --accent:      #5D768B;
+  --accent-light:#eaf2ef;
+  --accent-hover:#6c889e;
+  --gold:        #c9a84c;
+  --danger:      #c0392b;
+  --radius-sm:   8px;
+  --radius-md:   16px;
+  --radius-lg:   24px;
+  --shadow-card: 0 2px 12px rgba(26,23,20,.07), 0 1px 3px rgba(26,23,20,.05);
+  --shadow-hover:0 8px 32px rgba(26,23,20,.13), 0 2px 8px rgba(26,23,20,.07);
+  --transition:  .25s cubic-bezier(.4,0,.2,1);
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: "lora", serif;
+}
+
+/* ─────────────────────────────────────────────────
+   BASE
+───────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; }
+
+body {
+  background: var(--bg);
+  font-family: "Roboto", sans-serif;
+  color: var(--text-primary);
+  min-height: 100vh;
+}
+
+/* ─────────────────────────────────────────────────
+   HEADER
+───────────────────────────────────────────────── */
+
+
+.site-header {
+ 
+  padding: 20px 0;  
+}
+ h1{
+  color: var(--text);
+  width: fit-content;
+  padding-bottom: 8px;
+  position: relative;
+  display: inline-block;
+}
+
+h1::after{
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 5px;
+  background: linear-gradient(to right, transparent, #4d6274, transparent);
+}
+.header-accent {
+  color: var(--accent);
+}
+
+
+/* ─────────────────────────────────────────────────
+   MAIN
+───────────────────────────────────────────────── */
+.main-content {
+  padding-top: 36px;
+  padding-bottom: 64px;
+  max-width: 1200px;
+}
+
+/* ─────────────────────────────────────────────────
+   TABS
+───────────────────────────────────────────────── */
+.tabs-wrapper {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 36px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 6px;
+  width: 100%;
+}
+
+.tab-btn {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 10px 22px;
+  border: none;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--text-secondary);
+  font-family: var(--font-body);
+  font-size: .9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition);
+   width: 50%;
+}
+
+
+
+.tab-btn:hover {
+  background: var(--surface-2);
+  color: var(--text-primary);
+}
+
+.tab-btn.active {
+  background: var(--accent);
+  color: #fff;
+}
+
+.tab-btn.active .tab-icon {
+  color: rgba(255,255,255,.7);
+}
+
+/* ─────────────────────────────────────────────────
+   TAB SECTIONS
+───────────────────────────────────────────────── */
+.tab-section { display: none; }
+.tab-section.active { display: block; }
+
+.section-intro {
+  margin-bottom: 28px;
+}
+
+.section-title {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.section-desc {
+  color: var(--text-secondary);
+  font-size: .95rem;
+}
+
+/* ─────────────────────────────────────────────────
+   THERAPIST CARD
+───────────────────────────────────────────────── */
+.therapist-card {
+  
+
+  padding: 28px 24px 24px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+   transition-duration: 0.5s;
+  background-color: #FDFCFA;
+  padding: 20px;
+  border-radius: 20px;
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 8px;
+  overflow: hidden;
+}
+
+.therapist-card:hover {
+   box-shadow:  2px 4px 8px rgba(0, 0, 0, 0.5); 
+}
+
+/* match badge */
+.match-badge {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  background: var(--accent-light);
+  color: var(--accent);
+  font-size: .75rem;
+  font-weight: 700;
+  letter-spacing: .04em;
+  padding: 4px 10px;
+  border-radius: 20px;
+  border: 1px solid #c0ddd6;
+}
+
+/* card header */
+.card-header-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.avatar-wrap {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: -.02em;
+}
+
+.doctor-info .doctor-name {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 600;
+  line-height: 1.2;
+  margin-bottom: 3px;
+}
+
+.doctor-info .doctor-specialty {
+  color: var(--accent);
+  font-size: .85rem;
+  font-weight: 500;
+}
+
+/* tags */
+.tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.tag {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  font-size: .75rem;
+  font-weight: 500;
+  padding: 3px 10px;
+  border-radius: 20px;
+}
+
+/* bio */
+.card-bio {
+  font-size: .88rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  flex: 1;
+}
+
+/* meta row */
+.card-meta {
+  display: flex;
+  gap: 16px;
+  padding: 12px 0;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.meta-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.meta-label {
+  font-size: .7rem;
+  font-weight: 600;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.meta-value {
+  font-size: .95rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.meta-value.price {
+  color: var(--accent);
+}
+
+/* rating stars */
+.stars {
+  color: var(--gold);
+  font-size: .85rem;
+  letter-spacing: .05em;
+}
+
+/* card actions */
+.card-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-profile {
+  flex: 1;
+  padding: 10px 0;
+  border: 1.5px solid var(--accent);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--accent);
+  font-family: var(--font-body);
+  font-size: .88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  text-align: center;
+  text-decoration: none;
+}
+
+.btn-profile:hover {
+  background: var(--accent-light);
+  color: var(--accent-hover);
+  border-color: var(--accent-hover);
+}
+
+.btn-book {
+  flex: 1.4;
+  padding: 10px 0;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: var(--accent);
+  color: #fff;
+  font-family: var(--font-body);
+  font-size: .88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  text-align: center;
+  text-decoration: none;
+}
+
+.btn-book:hover {
+  background: var(--accent-hover);
+  color: #fff;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(61,107,94,.3);
+}
+
+/* ─────────────────────────────────────────────────
+   LOADING STATE
+───────────────────────────────────────────────── */
+.loading-text {
+  color: var(--text-muted);
+  font-size: .9rem;
+}
+
+.text-accent { color: var(--accent) !important; }
+
+/* ─────────────────────────────────────────────────
+   RESPONSIVE
+───────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .site-header { padding: 40px 16px 36px; }
+  .tabs-wrapper { width: 100%; }
+  .tab-btn { flex: 1; justify-content: center; }
+  .card-actions { flex-direction: column; }
+}
+
+@media (max-width: 576px) {
+  .card-meta { flex-wrap: wrap; }
+}
