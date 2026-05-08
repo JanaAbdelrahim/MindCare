@@ -8,7 +8,7 @@ use App\Models\IntakeQuestion;
 
 class IntakeQuestionsSeeder extends Seeder
 {
-   
+
     public function run(): void
     {
     

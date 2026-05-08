@@ -10,9 +10,20 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
-    // Show Pages
+
     public function showLogin()
     {
+        // Redirect already-authenticated users away from the login page
+        if (Auth::guard('patient')->check()) {
+            return redirect()->route('patient.profile');
+        }
+        if (Auth::guard('therapist')->check()) {
+            return redirect()->route('therapist.profile');
+        }
+        if (session('admin_logged_in')) {
+            return redirect()->route('admin.dashboard');
+        }
+
         return view('auth.login');
     }
 
@@ -21,77 +32,96 @@ class AuthController extends Controller
         return view('auth.login');
     }
 
-    // Login
+  
     public function login(Request $request)
     {
-        $request->validate([
-            'email'    => ['required', 'email', 'regex:/^[A-Za-z\-_\.0-9]+@(gmail|yahoo)\.com$/'],
-            'password' => ['required', 'string', 'min:8', 'max:20', 'regex:/^[A-Za-z0-9]+$/'],
-            'role'     => ['required', 'in:patient,therapist,admin'],
-        ]);
+        $request->validate(
+            [
+                'email' => ['required', 'email', 'regex:/^[A-Za-z\-_\.0-9]+@(gmail|yahoo)\.com$/'],
+                'password' => ['required', 'string', 'min:8', 'max:20', 'regex:/^[A-Za-z0-9]+$/'],
+            ],
+            [
+                'email.regex' => 'Only Gmail and Yahoo email addresses are accepted.',
+                'password.min' => 'Password must be at least 8 characters.',
+                'password.max' => 'Password must not exceed 20 characters.',
+                'password.regex' => 'Password may only contain letters and numbers.',
+            ],
+        );
 
-        return match ($request->role) {
-            'patient'   => $this->loginPatient($request),
-            'therapist' => $this->loginTherapist($request),
-            'admin'     => $this->loginAdmin($request),
-        };
-    }
+        $credentials = $request->only('email', 'password');
 
-    private function loginPatient(Request $request)
-    {
-        if (!Auth::guard('patient')->attempt($request->only('email', 'password'))) {
-            return back()->withErrors(['email' => 'Can\'t find an account with these credentials.']);
+        // ── 1. Try Patient guard ─────────────────────────────────────────────
+        if (Auth::guard('patient')->attempt($credentials)) {
+            $request->session()->regenerate();
+            return $this->successResponse($request, route('patient.intake'));
         }
 
-        $request->session()->regenerate();
-        return redirect()->route('patient.profile');
-    }
-
-    private function loginTherapist(Request $request)
-    {
-        if (!Auth::guard('therapist')->attempt($request->only('email', 'password'))) {
-            return back()->withErrors(['email' => 'Can\'t find an account with these credentials.']);
+        // ── 2. Try Therapist guard ───────────────────────────────────────────
+        if (Auth::guard('therapist')->attempt($credentials)) {
+            $request->session()->regenerate();
+            return $this->successResponse($request, route('therapist.profile'));
         }
 
-        $request->session()->regenerate();
-        return redirect()->route('therapist.profile');
-    }
-
-    private function loginAdmin(Request $request)
-    {
-        $emailMatch    = $request->email === config('admin.email');
-        $passwordMatch = Hash::check($request->password, config('admin.password'));
-
-        if (!$emailMatch || !$passwordMatch) {
-            return back()->withErrors(['email' => 'Admin credentials are incorrect.']);
+        // ── 3. Try Admin (credential-based, not Eloquent) ────────────────────
+        if ($this->attemptAdmin($request->email, $request->password)) {
+            $request->session()->regenerate();
+            session(['admin_logged_in' => true]);
+            return $this->successResponse($request, route('admin.dashboard'));
         }
 
-        $request->session()->regenerate();
-        session(['admin_logged_in' => true]);
-
-        return redirect()->route('admin.dashboard');
+        return $this->failResponse($request, 'No account found with these credentials.');
     }
 
-    // Register (Patients Only)
+   
+    private function attemptAdmin(string $email, string $password): bool
+    {
+        if (empty(config('admin.email')) || empty(config('admin.password'))) {
+            return false;
+        }
+
+        return $email === config('admin.email') && Hash::check($password, config('admin.password'));
+    }
+
     public function register(Request $request)
     {
-        $request->validate([
-            'first_name' => ['required', 'string', 'max:255', 'regex:/^[A-Za-z]+$/'],
-            'last_name'  => ['required', 'string', 'max:255', 'regex:/^[A-Za-z]+$/'],
-            'email'      => ['required', 'email', 'unique:patients,email', 'regex:/^[A-Za-z\-_\.0-9]+@(gmail|yahoo)\.com$/'],
-            'password'   => ['required', 'string', 'min:8', 'confirmed'],
-            'age'        => ['required', 'integer', 'min:10'],
-            'gender'     => ['required', 'in:male,female'],
-        ]);
+        $request->validate(
+            [
+                'first_name' => ['required', 'string', 'max:255', 'regex:/^[A-Za-z]+$/'],
+                'last_name' => ['required', 'string', 'max:255', 'regex:/^[A-Za-z]+$/'],
+                'email' => ['required', 'email', 'unique:patients,email', 'regex:/^[A-Za-z\-_\.0-9]+@(gmail|yahoo)\.com$/'],
+                'password' => [
+                    'required',
+                    'string',
+                    'min:8',
+                    'max:20',
+                    'confirmed', // Requires password_confirmation field in request
+                    'regex:/^[A-Za-z0-9]+$/',
+                ],
+                'age' => ['required', 'integer', 'min:10', 'max:120'],
+                'gender' => ['required', 'in:male,female'],
+            ],
+            [
+                'first_name.regex' => 'First name may only contain letters.',
+                'last_name.regex' => 'Last name may only contain letters.',
+                'email.unique' => 'An account with this email already exists.',
+                'email.regex' => 'Only Gmail and Yahoo email addresses are accepted.',
+                'password.regex' => 'Password may only contain letters and numbers.',
+                'password.min' => 'Password must be at least 8 characters.',
+                'password.confirmed' => 'Passwords do not match.',
+                'age.min' => 'You must be at least 10 years old to register.',
+                'gender.in' => 'Gender must be male or female.',
+            ],
+        );
 
         $patient = Patient::create([
             'first_name' => $request->first_name,
-            'last_name'  => $request->last_name,
-            'email'      => $request->email,
-            'password'   => Hash::make($request->password),
-            'age'        => $request->age,
-            'gender'     => $request->gender,
+            'last_name' => $request->last_name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'age' => $request->age,
+            'gender' => $request->gender,
         ]);
+
 
         Auth::guard('patient')->login($patient);
         $request->session()->regenerate();
@@ -99,15 +129,43 @@ class AuthController extends Controller
         return redirect()->route('patient.intake');
     }
 
-    // Logout
+
     public function logout(Request $request)
     {
         Auth::guard('patient')->logout();
         Auth::guard('therapist')->logout();
         $request->session()->forget('admin_logged_in');
+
+        // Invalidate session + rotate CSRF token — prevents session hijacking
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
         return redirect()->route('login');
+    }
+
+    private function successResponse(Request $request, string $redirectUrl)
+    {
+        if ($request->expectsJson()) {
+            return response()->json(['redirect' => $redirectUrl]);
+        }
+
+        return redirect($redirectUrl);
+    }
+
+    private function failResponse(Request $request, string $message)
+    {
+        if ($request->expectsJson()) {
+            return response()->json(
+                [
+                    'message' => $message,
+                    'errors' => ['email' => [$message]],
+                ],
+                422,
+            );
+        }
+
+        return back()
+            ->withErrors(['email' => $message])
+            ->withInput();
     }
 }

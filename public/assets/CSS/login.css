@@ -58,7 +58,29 @@ transition: transform .75s;
 .card-flip.flipped {
 transform: rotateY(180deg);
 }
-
+.alert-banner {
+display: none;
+width: 100%;
+padding: 10px 14px;
+border-radius: 10px;
+font-size: .82rem;
+font-weight: 500;
+margin-bottom: 12px;
+line-height: 1.4;
+}
+.alert-banner.show { display: block; }
+.alert-error { background: #FCEBEB; color: #A32D2D; border: 1px solid #F09595; }
+.alert-warning { background: #FAEEDA; color: #854F0B; border: 1px solid #FAC775; }
+.field-error {
+font-size: .78rem;
+color: #A32D2D;
+margin-top: 4px;
+display: none;
+}
+.field-error.show { display: block; }
+.field input.input-error,
+.field select.input-error { border-color: #E24B4A !important; }
+.btn-primary-custom:disabled { opacity: .65; cursor: not-allowed; }
 .card-front,
 .card-back {
 width: 100%;

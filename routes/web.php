@@ -16,112 +16,130 @@ use App\Http\Controllers\ComplaintsController;
 use App\Http\Controllers\ReportsController;
 use App\Http\Controllers\AvailabilitySlotsController;
 
+// ─────────────────────────────────────────────────────────────────────────────
+// PUBLIC ROUTES
+// ─────────────────────────────────────────────────────────────────────────────
+
 Route::get('/', fn() => view('home'))->name('home');
 
+// ── Authentication ────────────────────────────────────────────────────────────
+// Login and Register share the same Blade view (auth/login.blade.php).
+// The card flip between them is handled client-side in JS.
 Route::get('/auth/login',     [AuthController::class, 'showLogin'])->name('login');
 Route::post('/auth/login',    [AuthController::class, 'login']);
 Route::get('/auth/register',  [AuthController::class, 'showRegister'])->name('register');
 Route::post('/auth/register', [AuthController::class, 'register']);
-Route::post('/auth/logout',   [AuthController::class, 'logout'])->name('logout');
+
+// Logout is POST to protect against CSRF-based forced logouts
+Route::post('/auth/logout', [AuthController::class, 'logout'])->name('logout');
 
 
+// ─────────────────────────────────────────────────────────────────────────────
+// PATIENT ROUTES — protected by auth.patient middleware
+// ─────────────────────────────────────────────────────────────────────────────
 Route::middleware(['auth.patient'])->prefix('patient')->name('patient.')->group(function () {
 
-    // Profile
+    // ── Profile ───────────────────────────────────────────────────────────────
     Route::get('/profile',  [PatientsController::class, 'profile'])->name('profile');
-    Route::put('/profile',  [PatientsController::class, 'updateProfile']);
+    Route::put('/profile',  [PatientsController::class, 'updateProfile'])->name('profile.update');
 
-    // Intake
+    // ── Intake Form ───────────────────────────────────────────────────────────
+    // GET  shows the intake questionnaire
+    // POST submits the answers and calculates condition level
     Route::get('/intake',  [IntakeFormController::class, 'show'])->name('intake');
-    Route::post('/intake', [IntakeAnswerController::class, 'store']);
+    Route::post('/intake', [IntakeAnswerController::class, 'store'])->name('intake.store');
 
-    // Matching
-    Route::get('/matching',          [PatientsController::class, 'matching'])->name('matching');
-    Route::post('/matching/select',  [PatientsController::class, 'selectTherapist']);
+    // ── Therapist Matching ────────────────────────────────────────────────────
+    Route::get('/matching',         [PatientsController::class, 'matching'])->name('matching');
+    Route::post('/matching/select', [PatientsController::class, 'selectTherapist'])->name('matching.select');
 
-    // Booking
-    Route::get('/booking',                [BookingController::class, 'index'])->name('booking');
-    Route::post('/booking',               [BookingController::class, 'store']);
-    Route::delete('/booking/{session}',   [BookingController::class, 'cancel']);
+    // ── Booking ───────────────────────────────────────────────────────────────
+    Route::get('/booking',               [BookingController::class, 'index'])->name('booking');
+    Route::post('/booking',              [BookingController::class, 'store'])->name('booking.store');
+    Route::delete('/booking/{session}',  [BookingController::class, 'cancel'])->name('booking.cancel');
 
-    // Payment
+    // ── Payment ───────────────────────────────────────────────────────────────
     Route::get('/payment/{session}',   [PaymentsController::class, 'show'])->name('payment');
-    Route::post('/payment/{session}',  [PaymentsController::class, 'process']);
+    Route::post('/payment/{session}',  [PaymentsController::class, 'process'])->name('payment.process');
 
-    // Waiting Room
+    // ── Waiting Room ──────────────────────────────────────────────────────────
     Route::get('/waiting-room/{session}', [SessionsController::class, 'waitingRoom'])->name('waiting-room');
 
-    // Wellness
-    Route::get('/wellness',            [WellnessRecordsController::class, 'dashboard'])->name('wellness');
-    Route::post('/wellness/mood',      [WellnessRecordsController::class, 'storeMood']);
-    Route::post('/wellness/journal',   [WellnessRecordsController::class, 'storeJournal']);
+    // ── Wellness ──────────────────────────────────────────────────────────────
+    Route::get('/wellness',          [WellnessRecordsController::class, 'dashboard'])->name('wellness');
+    Route::post('/wellness/mood',    [WellnessRecordsController::class, 'storeMood'])->name('wellness.mood');
+    Route::post('/wellness/journal', [WellnessRecordsController::class, 'storeJournal'])->name('wellness.journal');
 
-    // Goals
-    Route::get('/goals',            [GoalsController::class, 'index'])->name('goals');
-    Route::post('/goals',           [GoalsController::class, 'store']);
-    Route::patch('/goals/{goal}',   [GoalsController::class, 'update']);
-    Route::delete('/goals/{goal}',  [GoalsController::class, 'destroy']);
+    // ── Goals ─────────────────────────────────────────────────────────────────
+    Route::get('/goals',           [GoalsController::class, 'index'])->name('goals');
+    Route::post('/goals',          [GoalsController::class, 'store'])->name('goals.store');
+    Route::patch('/goals/{goal}',  [GoalsController::class, 'update'])->name('goals.update');
+    Route::delete('/goals/{goal}', [GoalsController::class, 'destroy'])->name('goals.destroy');
 
-    // Complaints
-    Route::get('/complaints',   [ComplaintsController::class, 'index'])->name('complaints');
-    Route::post('/complaints',  [ComplaintsController::class, 'store']);
+    // ── Complaints ────────────────────────────────────────────────────────────
+    Route::get('/complaints',  [ComplaintsController::class, 'index'])->name('complaints');
+    Route::post('/complaints', [ComplaintsController::class, 'store'])->name('complaints.store');
 
-    // Notifications
-    Route::get('/notifications',                   [NotificationsController::class, 'index'])->name('notifications');
-    Route::patch('/notifications/{id}/read',       [NotificationsController::class, 'markRead']);
+    // ── Notifications ─────────────────────────────────────────────────────────
+    Route::get('/notifications',                 [NotificationsController::class, 'index'])->name('notifications');
+    Route::patch('/notifications/{id}/read',     [NotificationsController::class, 'markRead'])->name('notifications.read');
 });
 
-// ─────────────────────────────────────────────────
-// THERAPIST
-// ─────────────────────────────────────────────────
+
+// ─────────────────────────────────────────────────────────────────────────────
+// THERAPIST ROUTES — protected by auth.therapist middleware
+// ─────────────────────────────────────────────────────────────────────────────
 Route::middleware(['auth.therapist'])->prefix('therapist')->name('therapist.')->group(function () {
 
-    // Profile
-    Route::get('/profile',  [TherapistsController::class, 'profile'])->name('profile');
-    Route::put('/profile',  [TherapistsController::class, 'updateProfile']);
+    // ── Profile ───────────────────────────────────────────────────────────────
+    Route::get('/profile', [TherapistsController::class, 'profile'])->name('profile');
+    Route::put('/profile', [TherapistsController::class, 'updateProfile'])->name('profile.update');
 
-    // Sessions
-    Route::get('/sessions',                           [SessionsController::class, 'index'])->name('sessions');
-    Route::patch('/sessions/{session}/notes',         [SessionsController::class, 'updateNotes']);
-    Route::patch('/sessions/{session}/status',        [SessionsController::class, 'updateStatus']);
+    // ── Sessions ──────────────────────────────────────────────────────────────
+    Route::get('/sessions',                          [SessionsController::class, 'index'])->name('sessions');
+    Route::patch('/sessions/{session}/notes',        [SessionsController::class, 'updateNotes'])->name('sessions.notes');
+    Route::patch('/sessions/{session}/status',       [SessionsController::class, 'updateStatus'])->name('sessions.status');
 
-    // Patients
-    Route::get('/patients',             [TherapistsController::class, 'patients'])->name('patients');
-    Route::get('/patients/{patient}',   [TherapistsController::class, 'showPatient']);
+    // ── Patients ──────────────────────────────────────────────────────────────
+    Route::get('/patients',           [TherapistsController::class, 'patients'])->name('patients');
+    Route::get('/patients/{patient}', [TherapistsController::class, 'showPatient'])->name('patients.show');
 
-    // Availability Slots
-    Route::get('/slots',            [AvailabilitySlotsController::class, 'index'])->name('slots');
-    Route::post('/slots',           [AvailabilitySlotsController::class, 'store']);
-    Route::delete('/slots/{availabilitySlot}', [AvailabilitySlotsController::class, 'destroy']);
+    // ── Availability Slots ────────────────────────────────────────────────────
+    Route::get('/slots',                          [AvailabilitySlotsController::class, 'index'])->name('slots');
+    Route::post('/slots',                         [AvailabilitySlotsController::class, 'store'])->name('slots.store');
+    Route::delete('/slots/{availabilitySlot}',    [AvailabilitySlotsController::class, 'destroy'])->name('slots.destroy');
 
-    // Reports
-    Route::get('/reports',           [ReportsController::class, 'index'])->name('reports');
-    Route::post('/reports',          [ReportsController::class, 'store']);
-    Route::get('/reports/{report}',  [ReportsController::class, 'show']);
+    // ── Reports — including PDF download ─────────────────────────────────────
+    Route::get('/reports',                  [ReportsController::class, 'index'])->name('reports');
+    Route::post('/reports',                 [ReportsController::class, 'store'])->name('reports.store');
+    Route::get('/reports/{report}',         [ReportsController::class, 'show'])->name('reports.show');
+    // PDF download endpoint — generates and streams the report as a PDF file
+    Route::get('/reports/{report}/pdf',     [ReportsController::class, 'downloadPdf'])->name('reports.pdf');
 
-    // Notifications
-    Route::get('/notifications',                 [NotificationsController::class, 'index'])->name('notifications');
-    Route::patch('/notifications/{id}/read',     [NotificationsController::class, 'markRead']);
+    // ── Notifications ─────────────────────────────────────────────────────────
+    Route::get('/notifications',             [NotificationsController::class, 'index'])->name('notifications');
+    Route::patch('/notifications/{id}/read', [NotificationsController::class, 'markRead'])->name('notifications.read');
 });
 
-// ─────────────────────────────────────────────────
-// ADMIN
-// ─────────────────────────────────────────────────
+
+// ─────────────────────────────────────────────────────────────────────────────
+// ADMIN ROUTES — protected by auth.admin middleware (session-based)
+// ─────────────────────────────────────────────────────────────────────────────
 Route::middleware(['auth.admin'])->prefix('admin')->name('admin.')->group(function () {
 
-    // Dashboard
+    // ── Dashboard ─────────────────────────────────────────────────────────────
     Route::get('/dashboard', [TherapistsController::class, 'adminDashboard'])->name('dashboard');
 
-    // User Management
-    Route::get('/users',                              [PatientsController::class, 'adminIndex'])->name('users');
-    Route::post('/users/therapist',                   [TherapistsController::class, 'store']);
-    Route::delete('/users/patient/{patient}',         [PatientsController::class, 'destroy']);
-    Route::delete('/users/therapist/{therapist}',     [TherapistsController::class, 'destroy']);
+    // ── User Management ───────────────────────────────────────────────────────
+    Route::get('/users',                          [PatientsController::class, 'adminIndex'])->name('users');
+    Route::post('/users/therapist',               [TherapistsController::class, 'store'])->name('users.therapist.store');
+    Route::delete('/users/patient/{patient}',     [PatientsController::class, 'destroy'])->name('users.patient.destroy');
+    Route::delete('/users/therapist/{therapist}', [TherapistsController::class, 'destroy'])->name('users.therapist.destroy');
 
-    // Complaints
-    Route::get('/complaints',                   [ComplaintsController::class, 'adminIndex'])->name('complaints');
-    Route::patch('/complaints/{complaint}',     [ComplaintsController::class, 'updateStatus']);
+    // ── Complaints ────────────────────────────────────────────────────────────
+    Route::get('/complaints',                [ComplaintsController::class, 'adminIndex'])->name('complaints');
+    Route::patch('/complaints/{complaint}',  [ComplaintsController::class, 'updateStatus'])->name('complaints.update');
 
-    // Notifications
+    // ── Notifications ─────────────────────────────────────────────────────────
     Route::get('/notifications', [NotificationsController::class, 'adminIndex'])->name('notifications');
 });

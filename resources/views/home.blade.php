@@ -26,7 +26,7 @@
             </button>
             <div class="collapse navbar-collapse justify-content-end" id="navMenu">
                 <ul class="navbar-nav align-items-lg-center">
-                    {{-- Guest --}}
+                    {{-- Guest--}}
                     {{-- <li class="nav-item">
                         <a class="nav-link" href="#home">Home</a>
                     </li>
@@ -41,7 +41,7 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link btn-nav-cta" href="">Get Started</a>
-                    </li> --}}
+                    </li> --}} 
 
                     {{-- Patient --}}
                     <li class="nav-item">
