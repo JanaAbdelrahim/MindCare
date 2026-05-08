@@ -14,16 +14,16 @@ class Report extends Model
 
     public function patient()
     {
-        return $this->belongsTo(Patient::class);
+        return $this->belongsTo(Patient::class, 'patient_id');
     }
 
     public function therapist()
     {
-        return $this->belongsTo(Therapist::class);
+        return $this->belongsTo(Therapist::class, 'therapist_id');
     }
 
     public function intakeForm()
     {
-        return $this->belongsTo(IntakeForm::class);
+        return $this->belongsTo(IntakeForm::class, 'intake_form_id');
     }
 }

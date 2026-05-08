@@ -15,12 +15,12 @@ class PatientSession extends Model
 
     public function therapist()
     {
-        return $this->belongsTo(Therapist::class);
+        return $this->belongsTo(Therapist::class, 'therapist_id');
     }
 
     public function patient()
     {
-        return $this->belongsTo(Patient::class);
+        return $this->belongsTo(Patient::class, 'patient_id');
     }
 
     public function payment()

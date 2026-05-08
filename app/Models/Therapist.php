@@ -18,26 +18,26 @@ class Therapist extends Authenticatable
 
     public function sessions()
     {
-        return $this->hasMany(PatientSession::class);
+        return $this->hasMany(PatientSession::class, 'therapist_id');
     }
 
     public function availabilitySlots()
     {
-        return $this->hasMany(AvailabilitySlot::class);
+        return $this->hasMany(AvailabilitySlot::class, 'therapist_id');
     }
 
     public function payments()
     {
-        return $this->hasMany(Payment::class);
+        return $this->hasMany(Payment::class, 'therapist_id');
     }
 
     public function notifications()
     {
-        return $this->hasMany(Notification::class);
+        return $this->hasMany(Notification::class, 'therapist_id');
     }
 
     public function patients()
     {
-        return $this->hasMany(Patient::class);
+        return $this->hasMany(Patient::class, 'therapist_id');
     }
 }

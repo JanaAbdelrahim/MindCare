@@ -12,7 +12,7 @@ class AvailabilitySlot extends Model
 
     public function therapist()
     {
-        return $this->belongsTo(Therapist::class);
+        return $this->belongsTo(Therapist::class, 'therapist_id');
     }
 
     public function session()

@@ -44,7 +44,7 @@
                     </li> --}}
 
                     {{-- Patient --}}
-                    {{-- <li class="nav-item">
+                    <li class="nav-item">
                         <a class="nav-link active" href="#home">Home</a>
                     </li>
                     <li class="nav-item">
@@ -67,7 +67,7 @@
                                 <li><a class="dropdown-item" href="#">Logout <i class="fa-solid fa-arrow-right-from-bracket"></i></a></li>
                             </ul>
                         </li>
-                    </div> --}}
+                    </div>
 
                     {{-- Therapist --}}
                     {{-- <li class="nav-item">

@@ -16,7 +16,7 @@ class Patient extends Authenticatable
 
     public function therapist()
     {
-        return $this->belongsTo(Therapist::class);
+        return $this->belongsTo(Therapist::class, 'therapist_id');
     }
 
     public function sessions()

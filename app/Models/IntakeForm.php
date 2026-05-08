@@ -14,11 +14,11 @@ class IntakeForm extends Model
 
     public function patient()
     {
-        return $this->belongsTo(Patient::class);
+        return $this->belongsTo(Patient::class,'patient_id');
     }
 
     public function report()
     {
-        return $this->hasOne(Report::class);
+        return $this->hasOne(Report::class, 'intake_form_id');
     }
 }

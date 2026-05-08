@@ -12,6 +12,6 @@ class Goal extends Model
 
     public function patient()
     {
-        return $this->belongsTo(Patient::class);
+        return $this->belongsTo(Patient::class, 'patient_id');
     }
 }
