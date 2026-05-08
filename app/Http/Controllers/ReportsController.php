@@ -68,16 +68,7 @@ class ReportsController extends Controller
             ->with('success', 'Report created successfully.');
     }
 
-    // ─────────────────────────────────────────────────────────────────────────
-    // VIEW REPORT DETAIL
-    // ─────────────────────────────────────────────────────────────────────────
 
-    /**
-     * Show a single report's detail page.
-     *
-     * Authorization: only the therapist who created the report can view it.
-     * We use abort(403) instead of a policy for simplicity — suitable for this project size.
-     */
     public function show(Report $report)
     {
         /** @var \App\Models\Therapist $therapist */

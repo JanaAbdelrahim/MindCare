@@ -32,7 +32,7 @@ class AuthController extends Controller
         return view('auth.login');
     }
 
-  
+
     public function login(Request $request)
     {
         $request->validate(
@@ -50,19 +50,16 @@ class AuthController extends Controller
 
         $credentials = $request->only('email', 'password');
 
-        // ── 1. Try Patient guard ─────────────────────────────────────────────
         if (Auth::guard('patient')->attempt($credentials)) {
             $request->session()->regenerate();
             return $this->successResponse($request, route('patient.intake'));
         }
 
-        // ── 2. Try Therapist guard ───────────────────────────────────────────
-        if (Auth::guard('therapist')->attempt($credentials)) {
-            $request->session()->regenerate();
+            if (Auth::guard('therapist')->attempt($credentials)) {
+                $request->session()->regenerate();
             return $this->successResponse($request, route('therapist.profile'));
         }
 
-        // ── 3. Try Admin (credential-based, not Eloquent) ────────────────────
         if ($this->attemptAdmin($request->email, $request->password)) {
             $request->session()->regenerate();
             session(['admin_logged_in' => true]);
@@ -72,7 +69,7 @@ class AuthController extends Controller
         return $this->failResponse($request, 'No account found with these credentials.');
     }
 
-   
+
     private function attemptAdmin(string $email, string $password): bool
     {
         if (empty(config('admin.email')) || empty(config('admin.password'))) {

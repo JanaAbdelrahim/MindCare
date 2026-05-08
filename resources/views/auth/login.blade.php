@@ -2,12 +2,11 @@
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    {{-- CSRF meta tag — مطلوب لو هنستخدم AJAX في المستقبل --}}
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>MindCare — Sign In</title>
-
     <link rel="stylesheet" href="{{ asset('assets/CSS/plugins/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/CSS/plugins/fonts.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/CSS/global.css') }}">
@@ -16,9 +15,10 @@
 
 <body>
 
-    <div class="scene">
-        <div class="card-flip" id="flip">
 
+    <div class="scene">
+
+        <div class="card-flip" id="flip">
             <div class="card-front">
 
                 <div class="brand">
@@ -162,7 +162,6 @@
 
 
     <script>
-        // ── Card flip ────────────────────────────────────────────────────────
         function flipCard(toBack) {
             document.getElementById('flip').classList.toggle('flipped', toBack);
             clearFieldErrors(); 
