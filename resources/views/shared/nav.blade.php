@@ -2,17 +2,14 @@
     <div class="container">
         <a class="navbar-brand" href="#home">mind<span>Care</span></a>
 
-        <button class="navbar-toggler" type="button"
-            data-bs-toggle="collapse" data-bs-target="#navMenu"
-            aria-controls="navMenu" aria-expanded="false"
-            aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu"
+            aria-controls="navMenu" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
 
         <div class="collapse navbar-collapse justify-content-end" id="navMenu">
             <ul class="navbar-nav align-items-lg-center">
                 @if (session('admin_logged_in'))
-
                     <li class="nav-item">
                         <a class="nav-link active" href="#home">Home</a>
                     </li>
@@ -30,8 +27,8 @@
                             </div>
                         </li>
                         <li class="nav-item dropdown">
-                            <a class="nav-link btn-nav-cta dropdown-toggle" href="#"
-                                role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <a class="nav-link btn-nav-cta dropdown-toggle" href="#" role="button"
+                                data-bs-toggle="dropdown" aria-expanded="false">
                                 {{ session('admin_name') }}
                                 <i class="fa-solid fa-user"></i>
                             </a>
@@ -49,9 +46,8 @@
                         </li>
                     </div>
 
-                {{-- ==================== PATIENT ==================== --}}
+                    {{-- ==================== PATIENT ==================== --}}
                 @elseif (auth('patient')->check())
-
                     <li class="nav-item">
                         <a class="nav-link active" href="#home">Home</a>
                     </li>
@@ -72,8 +68,8 @@
                             </div>
                         </li>
                         <li class="nav-item dropdown">
-                            <a class="nav-link btn-nav-cta dropdown-toggle" href="#"
-                                role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <a class="nav-link btn-nav-cta dropdown-toggle" href="#" role="button"
+                                data-bs-toggle="dropdown" aria-expanded="false">
                                 {{ auth('patient')->user()->first_name }}
                                 <i class="fa-solid fa-user"></i>
                             </a>
@@ -94,9 +90,8 @@
                         </li>
                     </div>
 
-                {{-- ==================== THERAPIST ==================== --}}
+                    {{-- ==================== THERAPIST ==================== --}}
                 @elseif (auth('therapist')->check())
-
                     <li class="nav-item">
                         <a class="nav-link active" href="#home">Home</a>
                     </li>
@@ -114,8 +109,8 @@
                             </div>
                         </li>
                         <li class="nav-item dropdown">
-                            <a class="nav-link btn-nav-cta dropdown-toggle" href="#"
-                                role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <a class="nav-link btn-nav-cta dropdown-toggle" href="#" role="button"
+                                data-bs-toggle="dropdown" aria-expanded="false">
                                 {{ auth('therapist')->user()->first_name }}
                                 <i class="fa-solid fa-user"></i>
                             </a>
@@ -136,9 +131,8 @@
                         </li>
                     </div>
 
-                {{-- ==================== GUEST ==================== --}}
+                    {{-- ==================== GUEST ==================== --}}
                 @else
-
                     <li class="nav-item">
                         <a class="nav-link" href="#home">Home</a>
                     </li>
@@ -154,10 +148,16 @@
                     <li class="nav-item">
                         <a class="nav-link btn-nav-cta" href="{{ route('register') }}">Get Started</a>
                     </li>
-
                 @endif
 
             </ul>
         </div>
     </div>
 </nav>
+
+{{-- <div class="popUp list notifications" onclick="closePopUp()">
+    <div class="box">
+        <i class="fa-solid fa-xmark close" onclick="closePopUp()"></i>
+        <h2 class="title">Notifications</h2>
+    </div>
+</div> --}}

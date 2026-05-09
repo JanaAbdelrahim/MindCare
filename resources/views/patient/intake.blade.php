@@ -41,10 +41,8 @@
                             @foreach ($categoryQuestions as $catIndex => $question)
                                 @php $slideIndex++; @endphp
 
-                                <div class="swiper-slide"
-                                    data-question-id="{{ $question->id }}"
-                                    data-category="{{ ucfirst($category) }}"
-                                    data-category-index="{{ $catIndex + 1 }}"
+                                <div class="swiper-slide" data-question-id="{{ $question->id }}"
+                                    data-category="{{ ucfirst($category) }}" data-category-index="{{ $catIndex + 1 }}"
                                     data-category-total="{{ $categoryTotal }}">
 
                                     <div class="question d-flex align-items-center justify-content-between">

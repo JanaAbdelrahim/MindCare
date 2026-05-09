@@ -16,6 +16,7 @@
 <body>
 
     @include('shared.nav')
+
     <div class="adminDashboard pt-5">
         <div class="container">
             <h2 class="title mb-5 fs-1">Therapist Management</h2>
@@ -95,6 +96,8 @@
             </div>
         </div>
     </div>
+
+    @include('shared.footer')
 
     <div class="popUp list">
         <div class="box">

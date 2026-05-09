@@ -181,6 +181,8 @@
         </div>
     </div>
 
+    @include('shared.footer')
+
     <div class="loadingPage">
         <div class="loader"></div>
     </div>

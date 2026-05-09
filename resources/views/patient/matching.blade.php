@@ -61,6 +61,8 @@
 
     </main>
 
+    @include('shared.footer')
+
     <div class="loadingPage">
         <div class="loader"></div>
     </div>
@@ -72,10 +74,10 @@
     <script>
         let MATCHING_DATA = {
             recommended: @json($recommendedSpecialization),
-            therapists:  @json($therapistsData)
+            therapists: @json($therapistsData)
         };
         let SELECT_THERAPIST_URL = "{{ route('patient.matching.select') }}";
-        let CSRF_TOKEN           = "{{ csrf_token() }}";
+        let CSRF_TOKEN = "{{ csrf_token() }}";
     </script>
 
     <script src="{{ asset('assets/JS/matching.js') }}"></script>

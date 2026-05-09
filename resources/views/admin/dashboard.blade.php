@@ -15,6 +15,7 @@
 
 <body>
     @include('shared.nav')
+
     <div class="adminDashboard pt-5">
         <div class="container">
             <h2 class="title mb-5 fs-1">Admin Dashboard</h2>
@@ -59,10 +60,6 @@
                             </tr>
                         </thead>
                         <tbody>
-
-
-
-
                             @foreach ($recentSessions as $session)
                                 <tr>
                                     <td>{{ $session->patient->first_name }} {{ $session->patient->last_name }}</td>
@@ -76,13 +73,14 @@
                                     </td>
                                 </tr>
                             @endforeach
-
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
     </div>
+
+    @include('shared.footer')
 
     <div class="loadingPage">
         <div class="loader"></div>

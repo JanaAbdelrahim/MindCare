@@ -36,13 +36,16 @@
                     </div>
                     <div class="">
                         <label for="Complaint" class="w-100 mb-2">Detailed Description</label>
-                        <textarea class="form-control" name="complaint" id="Complaint" rows="5" placeholder="Please describe the issue clearly..."></textarea>
+                        <textarea class="form-control" name="complaint" id="Complaint" rows="5"
+                            placeholder="Please describe the issue clearly..."></textarea>
                     </div>
                     <button class="btn">Submit</button>
                 </form>
             </div>
         </div>
     </div>
+
+    @include('shared.footer')
 
     <div class="loadingPage">
         <div class="loader"></div>

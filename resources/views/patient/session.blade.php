@@ -14,7 +14,6 @@
 </head>
 
 <body>
-     @include('shared.nav')
     <header class="hdr">
         <div class="d-flex align-items-center gap-3">
             <div class="hdr-info">

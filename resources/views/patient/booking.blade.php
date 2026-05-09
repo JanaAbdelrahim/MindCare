@@ -14,7 +14,8 @@
 </head>
 
 <body>
-    @include('shared.nav') 
+    @include('shared.nav')
+
     <div class="page">
         <div class="container">
 
@@ -76,6 +77,8 @@
         </div>
     </div>
 
+    @include('shared.footer')
+
     <div class="loadingPage">
         <div class="loader"></div>
     </div>
@@ -85,9 +88,12 @@
     <script src="{{ asset('assets/JS/global.js') }}"></script>
 
     <script>
-        const BOOKING_DATA      = { therapist: @json($therapistData), slots: @json($slotsData) };
+        const BOOKING_DATA = {
+            therapist: @json($therapistData),
+            slots: @json($slotsData)
+        };
         const BOOKING_STORE_URL = "{{ route('patient.booking.store') }}";
-        const CSRF_TOKEN        = "{{ csrf_token() }}";
+        const CSRF_TOKEN = "{{ csrf_token() }}";
     </script>
 
     <script src="{{ asset('assets/JS/booking.js') }}"></script>
