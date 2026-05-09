@@ -13,7 +13,7 @@ class AuthAdmin
             return redirect()->route('login')
                 ->withErrors(['email' => 'Please login as admin.']);
         }
-
+    
         return $next($request);
     }
 }

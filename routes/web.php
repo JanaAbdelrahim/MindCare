@@ -67,16 +67,16 @@ Route::middleware(['auth.patient'])
         // ── Waiting Room ──────────────────────────────────────────────────────────
         Route::get('/waiting-room/{session}', [SessionsController::class, 'waitingRoom'])->name('waiting-room');
 
-        Route::get('/wellness', [WellnessRecordsController::class, 'dashboard'])->name('patient.wellness');
+        Route::get('/wellness', [WellnessRecordsController::class, 'index'])->name('wellness');
 
         // ── Mood ───────────────────────────────────────────────────────────────
-        Route::post('/wellness/mood', [WellnessRecordsController::class, 'storeMood'])->name('patient.wellness.mood.store');
+        Route::post('/wellness/mood', [WellnessRecordsController::class, 'storeMood'])->name('wellness.mood.store');
 
         // ── Journal ────────────────────────────────────────────────────────────
-        Route::post('/wellness/journal', [WellnessRecordsController::class, 'storeJournal'])->name('patient.wellness.journal.store');
+        Route::post('/wellness/journal', [WellnessRecordsController::class, 'storeJournal'])->name('wellness.journal.store');
 
         // ── Chart data (AJAX) ──────────────────────────────────────────────────
-        Route::get('/wellness/chart', [WellnessRecordsController::class, 'chartData'])->name('patient.wellness.chart');
+        Route::get('/wellness/chart', [WellnessRecordsController::class, 'chartData'])->name('wellness.chart');
         // ── Complaints ────────────────────────────────────────────────────────────
         Route::get('/complaints', [ComplaintsController::class, 'index'])->name('complaints');
         Route::post('/complaints', [ComplaintsController::class, 'store'])->name('complaints.store');
@@ -135,9 +135,9 @@ Route::middleware(['auth.admin'])
 
         // ── User Management ───────────────────────────────────────────────────────
         Route::get('/users', [PatientsController::class, 'adminIndex'])->name('users');
-        Route::post('/users/therapist', [TherapistsController::class, 'store'])->name('users.therapist.store');
-        Route::delete('/users/patient/{patient}', [PatientsController::class, 'destroy'])->name('users.patient.destroy');
-        Route::delete('/users/therapist/{therapist}', [TherapistsController::class, 'destroy'])->name('users.therapist.destroy');
+        Route::post('/users/therapist', [TherapistsController::class, 'store'])->name('therapist.store');
+        Route::delete('/users/patient/{patient}', [PatientsController::class, 'destroy'])->name('patient.destroy');
+        Route::delete('/users/therapist/{therapist}', [TherapistsController::class, 'destroy'])->name('therapist.destroy');
 
         // ── Complaints ────────────────────────────────────────────────────────────
         Route::get('/complaints', [ComplaintsController::class, 'adminIndex'])->name('complaints');

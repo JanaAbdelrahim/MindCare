@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="{{ asset('assets/CSS/reports-notifications.css') }}">
 </head>
 <body>
+    @include('shared.nav')
     <main class="work-page">
         <div class="container">
             <div class="mb-4">

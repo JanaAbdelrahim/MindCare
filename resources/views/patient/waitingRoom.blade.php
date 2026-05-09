@@ -14,7 +14,10 @@
 
 <body>
 
+    @include('shared.nav')
+
     <div class="split-screen">
+
         <div class="left-side">
             <div class="overlay-text">
                 <h2>Take a deep breath...</h2>
@@ -24,6 +27,7 @@
 
         <div class="right-side">
             <div class="content-wrapper">
+
                 <div class="icon-header">
                     <span class="leaf-icon">
                         <i class="fa-solid fa-heart" style="color: #5D768B;"></i>
@@ -59,8 +63,10 @@
                 <button class="btn-join" onclick="window.location.href='session.html'">
                     Join When Ready →
                 </button>
+
             </div>
         </div>
+
     </div>
 
     <div class="loadingPage">

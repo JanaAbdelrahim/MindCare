@@ -37,11 +37,6 @@ class AuthController extends Controller
     {
         $request->validate(
             [
-<<<<<<< HEAD
-                'email' => ['required', 'email', 'regex:/^[A-Za-z0-9._%-]+@(gmail|yahoo)\.com$/'],
-
-                'password' => ['required', 'string', 'min:8', 'max:20', 'regex:/^[A-Za-z0-9]+$/'],
-=======
                 'email' => [
                     'required',
                     'email',
@@ -55,7 +50,6 @@ class AuthController extends Controller
                     'max:20',
                     'regex:/^[A-Za-z0-9]+$/'
                 ],
->>>>>>> a0ab0a54b02c9b1029c97517d4e84c7970b369b0
             ],
             [
                 'email.regex' => 'Only Gmail and Yahoo email addresses are accepted.',
@@ -72,31 +66,17 @@ class AuthController extends Controller
 
             $request->session()->regenerate();
 
-<<<<<<< HEAD
-            return $this->successResponse($request, route('patient.intake'));
-=======
             return $this->successResponse(
                 $request,
                 route('patient.intake')
             );
->>>>>>> a0ab0a54b02c9b1029c97517d4e84c7970b369b0
         }
 
         // Therapist Login
         if (Auth::guard('therapist')->attempt($credentials)) {
-<<<<<<< HEAD
             $request->session()->regenerate();
 
             return $this->successResponse($request, route('therapist.profile'));
-=======
-
-            $request->session()->regenerate();
-
-            return $this->successResponse(
-                $request,
-                route('therapist.profile')
-            );
->>>>>>> a0ab0a54b02c9b1029c97517d4e84c7970b369b0
         }
 
         // Admin Login
@@ -105,20 +85,10 @@ class AuthController extends Controller
             $request->session()->regenerate();
 
             session([
-<<<<<<< HEAD
                 'admin_logged_in' => true,
             ]);
 
             return $this->successResponse($request, route('admin.dashboard'));
-=======
-                'admin_logged_in' => true
-            ]);
-
-            return $this->successResponse(
-                $request,
-                route('admin.dashboard')
-            );
->>>>>>> a0ab0a54b02c9b1029c97517d4e84c7970b369b0
         }
 
         return $this->failResponse(
@@ -210,12 +180,6 @@ class AuthController extends Controller
             'gender' => $request->gender,
         ]);
 
-<<<<<<< HEAD
-        // Do NOT log in automatically after registration.
-        // Redirect to login so the patient authenticates explicitly,
-        // then the login flow will send them to the intake form.
-        return redirect()->route('login')->with('success', 'Account created successfully! Please sign in to continue.');
-=======
         // Login after registration
         Auth::guard('patient')->login($patient);
 
@@ -228,7 +192,6 @@ class AuthController extends Controller
                 'success',
                 'Registration successful!'
             );
->>>>>>> a0ab0a54b02c9b1029c97517d4e84c7970b369b0
     }
 
     public function logout(Request $request)
@@ -252,14 +215,9 @@ class AuthController extends Controller
         string $redirectUrl
     ) {
         if ($request->expectsJson()) {
-<<<<<<< HEAD
-            return response()->json([
-                'redirect' => $redirectUrl,
-=======
 
             return response()->json([
                 'redirect' => $redirectUrl
->>>>>>> a0ab0a54b02c9b1029c97517d4e84c7970b369b0
             ]);
         }
 
@@ -277,11 +235,7 @@ class AuthController extends Controller
                     'message' => $message,
 
                     'errors' => [
-<<<<<<< HEAD
-                        'email' => [$message],
-=======
                         'email' => [$message]
->>>>>>> a0ab0a54b02c9b1029c97517d4e84c7970b369b0
                     ],
                 ],
                 422
@@ -290,11 +244,7 @@ class AuthController extends Controller
 
         return back()
             ->withErrors([
-<<<<<<< HEAD
-                'email' => $message,
-=======
-                'email' => $message
->>>>>>> a0ab0a54b02c9b1029c97517d4e84c7970b369b0
+                'email' => [$message],
             ])
             ->withInput();
     }

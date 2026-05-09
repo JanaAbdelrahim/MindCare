@@ -12,6 +12,7 @@
 </head>
 
 <body>
+    @include('shared.nav')
 
     <div class="container">
         <div class="page-header">

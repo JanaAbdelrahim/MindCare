@@ -17,6 +17,7 @@
 
     <div class="intakeForm">
         <div class="container">
+
             <h2 class="head text-center my-5 fs-1">Help us match you to the right Therapist</h2>
 
             <div class="timeline">
@@ -40,6 +41,7 @@
 
                             @foreach ($categoryQuestions as $catIndex => $question)
                                 @php $slideIndex++; @endphp
+
                                 <div class="swiper-slide"
                                     data-question-id="{{ $question->id }}"
                                     data-category="{{ ucfirst($category) }}"
@@ -53,8 +55,7 @@
 
                                     <div class="choices row">
                                         @foreach ($question->options as $option)
-                                            <div class="choice col-md-6"
-                                                data-option-id="{{ $option->id }}">
+                                            <div class="choice col-md-6" data-option-id="{{ $option->id }}">
                                                 <div class="item">{{ $option->option_text }}</div>
                                             </div>
                                         @endforeach
@@ -85,9 +86,8 @@
         <div class="loader"></div>
     </div>
 
-    {{-- Pass the submit URL to JS --}}
     <script>
-    let INTAKE_SUBMIT_URL = "{{ route('intake.submit') }}";
+        let INTAKE_SUBMIT_URL = "{{ route('patient.intake.submit') }}";
     </script>
 
     <script src="{{ asset('assets/JS/plugins/bootstrap.min.js') }}"></script>

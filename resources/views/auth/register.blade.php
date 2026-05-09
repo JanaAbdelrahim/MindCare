@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>MindCare — Create Account</title>
+
     <link rel="stylesheet" href="{{ asset('assets/CSS/plugins/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/CSS/plugins/fonts.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/CSS/global.css') }}">
@@ -13,7 +14,6 @@
 </head>
 
 <body>
-
     <div class="scene">
         <div class="card-single">
 
@@ -35,38 +35,48 @@
 
                 <div class="row-2">
                     <div class="field">
-                        <input type="text" name="first_name" id="reg-first" placeholder="First Name"
-                            value="{{ old('first_name') }}" autocomplete="given-name" required />
+                        <input type="text" name="first_name" id="reg-first"
+                            placeholder="First Name"
+                            value="{{ old('first_name') }}"
+                            autocomplete="given-name" required />
                         <p class="field-error" id="err-reg-first"></p>
                     </div>
                     <div class="field">
-                        <input type="text" name="last_name" id="reg-last" placeholder="Last Name"
-                            value="{{ old('last_name') }}" autocomplete="family-name" required />
+                        <input type="text" name="last_name" id="reg-last"
+                            placeholder="Last Name"
+                            value="{{ old('last_name') }}"
+                            autocomplete="family-name" required />
                         <p class="field-error" id="err-reg-last"></p>
                     </div>
                 </div>
 
                 <div class="field">
-                    <input type="email" name="email" id="reg-email" placeholder="Email address"
-                        value="{{ old('email') }}" autocomplete="email" required />
+                    <input type="email" name="email" id="reg-email"
+                        placeholder="Email address"
+                        value="{{ old('email') }}"
+                        autocomplete="email" required />
                     <p class="field-error" id="err-reg-email"></p>
                 </div>
 
                 <div class="field">
-                    <input type="password" name="password" id="reg-pass" placeholder="Password"
+                    <input type="password" name="password" id="reg-pass"
+                        placeholder="Password"
                         autocomplete="new-password" required />
                     <p class="field-error" id="err-reg-pass"></p>
                 </div>
 
                 <div class="field">
                     <input type="password" name="password_confirmation" id="reg-pass-confirm"
-                        placeholder="Confirm Password" autocomplete="new-password" required />
+                        placeholder="Confirm Password"
+                        autocomplete="new-password" required />
                     <p class="field-error" id="err-reg-pass-confirm"></p>
                 </div>
 
                 <div class="field">
-                    <input type="number" name="age" id="reg-age" placeholder="Age"
-                        value="{{ old('age') }}" min="10" max="120" required />
+                    <input type="number" name="age" id="reg-age"
+                        placeholder="Age"
+                        value="{{ old('age') }}"
+                        min="10" max="120" required />
                     <p class="field-error" id="err-reg-age"></p>
                 </div>
 
@@ -75,7 +85,7 @@
                         <option value="" disabled {{ old('gender') ? '' : 'selected' }}>
                             Choose your gender
                         </option>
-                        <option value="male" {{ old('gender') === 'male' ? 'selected' : '' }}>Male</option>
+                        <option value="male"   {{ old('gender') === 'male'   ? 'selected' : '' }}>Male</option>
                         <option value="female" {{ old('gender') === 'female' ? 'selected' : '' }}>Female</option>
                     </select>
                     <p class="field-error" id="err-reg-gender"></p>

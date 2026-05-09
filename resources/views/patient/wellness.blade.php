@@ -4,17 +4,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MindCare</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>MindCare</title>
 
     <link rel="stylesheet" href="{{ asset('assets/CSS/plugins/all.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/CSS/plugins/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/CSS/plugins/fonts.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/CSS/global.css') }}">
-    <link rel="stylesheet" href="{{asset('assets/CSS/wellness.css')}}">
+    <link rel="stylesheet" href="{{ asset('assets/CSS/wellness.css') }}">
 </head>
 
 <body>
+        @include('shared.nav')
 
     <div class="container main dashboard">
 
@@ -23,8 +24,8 @@
             <p>How are you feeling today?</p>
         </div>
 
-
         <div class="left">
+
             <div class="mood-card">
                 <div class="card-header">
                     <h3>Daily Check-in</h3>
@@ -63,7 +64,6 @@
                 <canvas id="myChart"></canvas>
             </div>
 
-
             <div class="journal-card">
                 <div class="journal-header">
                     <h3>Journal</h3>
@@ -72,28 +72,22 @@
                 <div class="journal-entries" id="journalEntries">
                     <div class="journal-entry">
                         <p class="entry-date">Today · Wednesday, April 22</p>
-                        <p class="entry-text">Feeling much better today after the session. The breathing exercises
-                            really helped
-                            with the morning anxiety. I'm going to try the thought records worksheet Dr. Hassan shared…
-                        </p>
+                        <p class="entry-text">Feeling much better today after the session. The breathing exercises really
+                            helped with the morning anxiety. I'm going to try the thought records worksheet Dr. Hassan shared…</p>
                     </div>
                     <div class="journal-entry">
                         <p class="entry-date">Tuesday, April 21</p>
                         <p class="entry-text">Rough morning but managed to complete the meditation. Noticing patterns in
-                            when
-                            anxiety peaks — seems related to work deadlines.</p>
+                            when anxiety peaks — seems related to work deadlines.</p>
                     </div>
                     <div class="journal-entry">
                         <p class="entry-date">Monday, April 20</p>
-                        <p class="entry-text">Good day overall. Took the long route home for a walk. Felt more grounded
-                            in the
-                            evening.</p>
+                        <p class="entry-text">Good day overall. Took the long route home for a walk. Felt more grounded in the evening.</p>
                     </div>
                 </div>
             </div>
 
         </div>
-
 
         <div class="right">
 
@@ -102,16 +96,14 @@
                     <span class="icon"><i class="fa-regular fa-calendar-days"></i></span>
                     <h3>Upcoming Sessions</h3>
                 </div>
-
                 <div class="session">
                     <div class="avatar">SC</div>
                     <div class="info">
                         <h4>Dr. Sarah Chen</h4>
-                        <p class="type">Anxiety & Stress</p>
+                        <p class="type">Anxiety &amp; Stress</p>
                         <p class="time">Today • 2:00 PM</p>
                     </div>
                 </div>
-
                 <div class="session">
                     <div class="avatar">MT</div>
                     <div class="info">
@@ -122,7 +114,6 @@
                 </div>
             </div>
 
-
             <div class="goals-card">
                 <div class="goals-card-header">
                     <h3>Weekly Goals</h3>
@@ -132,18 +123,17 @@
                 <button class="add-goal-btn" id="openAddGoal">+ Add Goal</button>
             </div>
 
-
             <div class="modal-overlay" id="addGoalModal">
                 <div class="modal-box">
                     <h4>Add New Goal</h4>
-                    <input type="text" id="goalTitleInput" placeholder="Goal title (e.g. Meditate 10 min)"
-                        class="modal-input" />
+                    <input type="text" id="goalTitleInput"
+                        placeholder="Goal title (e.g. Meditate 10 min)" class="modal-input" />
                     <div class="modal-row">
-                        <input type="number" id="goalCurrentInput" placeholder="Current" min="0"
-                            class="modal-input-sm" />
+                        <input type="number" id="goalCurrentInput" placeholder="Current"
+                            min="0" class="modal-input-sm" />
                         <span>/</span>
-                        <input type="number" id="goalTotalInput" placeholder="Total" min="1"
-                            class="modal-input-sm" />
+                        <input type="number" id="goalTotalInput" placeholder="Total"
+                            min="1" class="modal-input-sm" />
                     </div>
                     <div class="modal-actions">
                         <button class="modal-cancel" id="cancelAddGoal">Cancel</button>
@@ -152,18 +142,17 @@
                 </div>
             </div>
 
-
             <div class="modal-overlay" id="writeModal">
                 <div class="modal-box">
                     <h4>New Journal Entry</h4>
-                    <textarea id="journalInput" placeholder="How are you feeling today…" class="modal-textarea"></textarea>
+                    <textarea id="journalInput"
+                        placeholder="How are you feeling today…" class="modal-textarea"></textarea>
                     <div class="modal-actions">
                         <button class="modal-cancel" id="cancelWrite">Cancel</button>
                         <button class="modal-confirm" id="confirmWrite">Save</button>
                     </div>
                 </div>
             </div>
-
 
             <div class="actions-card">
                 <div class="header">
@@ -201,7 +190,8 @@
     <script src="{{ asset('assets/JS/plugins/jQuery.js') }}"></script>
     <script src="{{ asset('assets/JS/plugins/chart.js') }}"></script>
     <script src="{{ asset('assets/JS/global.js') }}"></script>
-    <script src="{{ asset('assets/JS/wellness.js')}}"></script>
+    <script src="{{ asset('assets/JS/wellness.js') }}"></script>
+
 </body>
 
 </html>

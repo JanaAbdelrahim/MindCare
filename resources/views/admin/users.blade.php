@@ -14,7 +14,7 @@
 
 <body>
 
-
+    @include('shared.nav')
     <div class="adminDashboard pt-5">
         <div class="container">
             <h2 class="title mb-5 fs-1">Therapist Management</h2>
@@ -78,7 +78,7 @@
                                     </td>
                                     <td>{{ $patient->condition_level }}</td>
                                     <td>
-                                        <form action="{{ route('users.patients.destroy', $patient->id) }}"
+                                        <form action="{{ route('admin.patient.destroy', $patient->id) }}"
                                             method="POST">
                                             @csrf
                                             @method('DELETE')

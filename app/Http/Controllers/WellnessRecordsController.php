@@ -9,14 +9,7 @@ use Illuminate\Support\Carbon;
 
 class WellnessRecordsController extends Controller
 {
-    // =========================================================================
-    //  DASHBOARD
-    // =========================================================================
-
-    /**
-     * Main wellness page — loads records, journals, goals, and chart data.
-     */
-    public function dashboard()
+    public function index()
     {
         /** @var \App\Models\Patient $patient */
         $patient = auth()->guard('patient')->user();

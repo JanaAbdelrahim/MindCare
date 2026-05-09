@@ -49,11 +49,7 @@ class IntakeFormController extends Controller
             'success' => true,
             'overall_level' => $result['overall_level'],
             'recommended' => $result['recommended'],
-<<<<<<< HEAD
             'redirect' => route('patient.matching'), // change to your next page
-=======
-            'redirect' => route('patient.profile'), // change to your next page
->>>>>>> a0ab0a54b02c9b1029c97517d4e84c7970b369b0
         ]);
     }
 }

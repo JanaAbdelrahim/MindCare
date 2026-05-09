@@ -14,28 +14,28 @@
 
 <body>
 
-    <!-- ───── HERO HEADER ───── -->
+    @include('shared.nav')
+
     <header class="site-header">
         <div class="container text-center">
-
-            <h1 class="header-title">Find the right therapist<br><span class="header-accent">for you</span></h1>
-
+            <h1 class="header-title">
+                Find the right therapist<br>
+                <span class="header-accent">for you</span>
+            </h1>
         </div>
     </header>
 
-    <!-- ───── TABS ───── -->
     <main class="container main-content">
 
         <div class="tabs-wrapper">
-            <button class="tab-btn active" data-tab="matching" onclick="switchTab('matching')"> Your Matches</button>
+            <button class="tab-btn active" data-tab="matching" onclick="switchTab('matching')">Your Matches</button>
             <button class="tab-btn" data-tab="all" onclick="switchTab('all')">All Therapists</button>
         </div>
 
-        <!-- ── TAB: MATCHING ── -->
         <section id="tab-matching" class="tab-section active">
             <div class="section-intro">
                 <h2 class="section-title">Your Top Matches</h2>
-                <p class="section-desc">Therapists selected based on your goals, and preferences.</p>
+                <p class="section-desc">Therapists selected based on your goals and preferences.</p>
             </div>
             <div id="matching-grid" class="therapist-grid row g-4">
                 <div class="col-12 text-center py-5 loading-state">
@@ -45,7 +45,6 @@
             </div>
         </section>
 
-        <!-- ── TAB: ALL ── -->
         <section id="tab-all" class="tab-section">
             <div class="section-intro">
                 <h2 class="section-title">All Therapists</h2>
@@ -69,18 +68,17 @@
     <script src="{{ asset('assets/JS/plugins/jQuery.js') }}"></script>
     <script src="{{ asset('assets/JS/global.js') }}"></script>
 
-    {{-- Pass real backend data to matching.js --}}
     <script>
         let MATCHING_DATA = {
             recommended: @json($recommendedSpecialization),
             therapists:  @json($therapistsData)
         };
-
         let SELECT_THERAPIST_URL = "{{ route('patient.matching.select') }}";
-        let CSRF_TOKEN = "{{ csrf_token() }}";
+        let CSRF_TOKEN           = "{{ csrf_token() }}";
     </script>
 
     <script src="{{ asset('assets/JS/matching.js') }}"></script>
+
 </body>
 
 </html>

@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>MindCare — Sign In</title>
+
     <link rel="stylesheet" href="{{ asset('assets/CSS/plugins/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/CSS/plugins/fonts.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/CSS/global.css') }}">
@@ -13,7 +14,6 @@
 </head>
 
 <body>
-
     <div class="scene">
         <div class="card-single">
 
@@ -40,13 +40,16 @@
                 @csrf
 
                 <div class="field">
-                    <input type="email" name="email" id="login-email" placeholder="Email address"
-                        value="{{ old('email') }}" autocomplete="email" required />
+                    <input type="email" name="email" id="login-email"
+                        placeholder="Email address"
+                        value="{{ old('email') }}"
+                        autocomplete="email" required />
                     <p class="field-error" id="err-login-email"></p>
                 </div>
 
                 <div class="field">
-                    <input type="password" name="password" id="login-pass" placeholder="Password"
+                    <input type="password" name="password" id="login-pass"
+                        placeholder="Password"
                         autocomplete="current-password" required />
                     <p class="field-error" id="err-login-pass"></p>
                 </div>
