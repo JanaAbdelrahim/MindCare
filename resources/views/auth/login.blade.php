@@ -15,12 +15,15 @@
 </head>
 
 <body>
+
     <div class="scene">
         <div class="card-single">
 
-            <div class="brand">
+            {{-- <div class="brand">
                 <span class="brand-name">Mind Care</span>
-            </div>
+            </div> --}}
+
+            {{-- <div class="brand">mind<span>Care</span></div> --}}
 
             <h2>Welcome back</h2>
             <p class="sub">Sign in to continue your wellness journey</p>
@@ -54,8 +57,6 @@
                         autocomplete="current-password" required />
                     <p class="field-error" id="err-login-pass"></p>
                 </div>
-
-                <a href="#" class="forgot">Forgot password?</a>
 
                 <button type="submit" class="btn-primary-custom" id="login-btn">
                     Sign In

@@ -16,12 +16,13 @@
 </head>
 
 <body>
+
     <div class="scene">
         <div class="card-single">
 
-            <div class="brand">
+            {{-- <div class="brand">
                 <span class="brand-name">Mind Care</span>
-            </div>
+            </div> --}}
 
             <h2>Create account</h2>
             <p class="sub">Start your journey</p>

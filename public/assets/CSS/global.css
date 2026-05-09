@@ -16,6 +16,7 @@ body::-webkit-scrollbar {
     background: rgb(35, 58, 78);
     width: 13px;
 }
+
 body::-webkit-scrollbar-thumb {
     background-color: rgb(200, 179, 155);
     border-radius: 23px;
@@ -295,4 +296,69 @@ body::-webkit-scrollbar-thumb {
     background: #5f7685;
     border-color: #5f7685;
     color: rgb(248, 246, 243);
+}
+
+@media (min-width: 320px) and (max-width: 992px) {
+    #mainNav .navbar-toggler {
+        border: 2px solid var(--main2-color);
+        outline: none;
+        box-shadow: none;
+    }
+
+    #navMenu {
+        background: rgba(248, 239, 229, 0.97);
+        border-radius: 6px;
+        padding-inline: 16px;
+        margin-top: 8px;
+    }
+
+    #mainNav.scrolled .nav-link,
+    #mainNav .nav-link {
+        color: var(--dark-color);
+        width: fit-content;
+    }
+
+    #mainNav.scrolled .nav-item,
+    #mainNav .nav-item {
+        margin-block: 12px;
+    }
+
+    #mainNav .navbar-brand {
+        font-size: 35px;
+    }
+
+    .footer-bottom .container {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+}
+
+@media (min-width: 577px) and (max-width: 992px) {
+    .footer-bottom .container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 20px;
+        flex-wrap: nowrap;
+    }
+}
+
+@media (min-width: 992px) and (max-width: 1300px) {
+    #navMenu {
+        background: transparent !important;
+        padding: 0px;
+        margin-top: 0px;
+    }
+
+    #mainNav .navbar-brand {
+        font-size: 35px;
+    }
+}
+
+@media (min-width: 1181px) and (max-width: 1300px) {
+    #mainNav .navbar-brand {
+        font-size: 40px;
+    }
 }
