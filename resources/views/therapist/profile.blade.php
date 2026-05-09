@@ -13,7 +13,122 @@
 </head>
 
 <body>
+    <nav id="mainNav" class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand" href="#home">mind<span>Care</span></a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu"
+                aria-controls="navMenu" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navMenu">
+                <ul class="navbar-nav align-items-lg-center">
+                    {{-- Guest --}}
+                    {{-- <li class="nav-item">
+                        <a class="nav-link" href="#home">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#about">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#services">Services</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#faq">FAQ</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link btn-nav-cta" href="">Get Started</a>
+                    </li> --}}
 
+                    {{-- Patient --}}
+                    {{-- <li class="nav-item">
+                        <a class="nav-link active" href="#home">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="">Wellness</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="">Matched Therapists</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="">Book Session</a>
+                    </li>
+                    <div class="d-flex">
+                        <li class="nav-item">
+                            <div class="nav-link btn-nav-cta" onclick="openPopUp('notifications')"><i class="fa-solid fa-bell"></i></div>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link btn-nav-cta dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Maryam <i class="fa-solid fa-user"></i></a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#">Profile</a></li>
+                                <form action="{{ route('logout') }}" method="POST">
+                                @csrf
+                                <li><a class="dropdown-item" href="#"
+                                        onclick="event.preventDefault(); this.closest('form').submit();">Logout <i
+                                            class="fa-solid fa-arrow-right-from-bracket"></i></a></li>
+                                </form>
+                            </ul>
+                        </li>
+                    </div> --}}
+
+                    {{-- Therapist --}}
+                    <li class="nav-item">
+                        <a class="nav-link" href="#home">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="">Patients</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="">Sessions</a>
+                    </li>
+                    <li class="nav-item">
+                        <div class="nav-link btn-nav-cta" onclick="openPopUp('notifications')"><i
+                                class="fa-solid fa-bell"></i></div>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link btn-nav-cta dropdown-toggle" href="#" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">Maryam <i class="fa-solid fa-user"></i></a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#">Profile</a></li>
+                            <form action="{{ route('logout') }}" method="POST">
+                                @csrf
+                                <li><a class="dropdown-item" href="#"
+                                        onclick="event.preventDefault(); this.closest('form').submit();">Logout <i
+                                            class="fa-solid fa-arrow-right-from-bracket"></i></a></li>
+                            </form>
+                        </ul>
+                    </li>
+
+                    {{-- Admin --}}
+                    {{-- <li class="nav-item">
+                        <a class="nav-link" href="#home">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="">User Management</a>
+                    </li>
+                    <li class="nav-item">
+                        <div class="nav-link btn-nav-cta" onclick="openPopUp('notifications')"><i
+                                class="fa-solid fa-bell"></i></div>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link btn-nav-cta dropdown-toggle" href="#" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">Maryam <i class="fa-solid fa-user"></i></a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#">Profile</a></li>
+                            <form action="{{ route('logout') }}" method="POST">
+                                @csrf
+                                <li><a class="dropdown-item" href="#"
+                                        onclick="event.preventDefault(); this.closest('form').submit();">Logout <i
+                                            class="fa-solid fa-arrow-right-from-bracket"></i></a></li>
+                            </form>
+                        </ul>
+                    </li> --}}
+                </ul>
+            </div>
+        </div>
+    </nav>
     <div class="profile my-5 pt-5">
         <div class="container">
             <div class="row">

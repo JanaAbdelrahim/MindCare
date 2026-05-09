@@ -14,35 +14,21 @@ class PatientsController extends Controller
     public function index()
     {
         /** @var Patient $patient */
-        $patient = auth()->guard('patient')->user()
+        $patient = auth()
+            ->guard('patient')
+            ->user()
             ->load(['sessions.therapist', 'wellnessRecords']);
 
-        $name              = $patient->first_name . ' ' . $patient->last_name;
-        $nextSession       = $this->getNextSession($patient);
-        $mood              = $this->getMood($patient);
-        $upcomingSessions  = $this->getUpcomingSessions($patient);
+        $name = $patient->first_name . ' ' . $patient->last_name;
+        $nextSession = $this->getNextSession($patient);
+        $mood = $this->getMood($patient);
+        $upcomingSessions = $this->getUpcomingSessions($patient);
         $completedSessions = $this->getCompletedSessions($patient);
-        $totalSessions     = $this->getTotalSessions($patient);
+        $totalSessions = $this->getTotalSessions($patient);
 
-        return view('patient.profile', compact(
-            'patient',
-            'name',
-            'nextSession',
-            'mood',
-            'upcomingSessions',
-            'completedSessions',
-            'totalSessions'
-        ));
+        return view('patient.profile', compact('patient', 'name', 'nextSession', 'mood', 'upcomingSessions', 'completedSessions', 'totalSessions'));
     }
 
-    public function profile()
-    {
-        /** @var Patient $patient */
-        $patient = auth()->guard('patient')->user()
-            ->load(['sessions.therapist', 'wellnessRecords']);
-
-        return view('patient.profile', compact('patient'));
-    }
 
     public function updateProfile(Request $request)
     {
@@ -50,12 +36,12 @@ class PatientsController extends Controller
         $patient = auth()->guard('patient')->user();
 
         $validated = $request->validate([
-            'first_name'    => ['required', 'string', 'max:255'],
-            'last_name'     => ['required', 'string', 'max:255'],
-            'email'         => ['required', 'email', Rule::unique('patients')->ignore($patient->id)],
+            'first_name' => ['required', 'string', 'max:255'],
+            'last_name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email', Rule::unique('patients')->ignore($patient->id)],
             'date_of_birth' => ['nullable', 'date', 'before:today'],
-            'gender'        => ['nullable', 'in:male,female,other'],
-            'password'      => ['nullable', 'string', 'min:8', 'confirmed'],
+            'gender' => ['nullable', 'in:male,female,other'],
+            'password' => ['nullable', 'string', 'min:8', 'confirmed'],
         ]);
 
         if (!empty($validated['password'])) {
@@ -76,13 +62,30 @@ class PatientsController extends Controller
 
         $recommendedSpecialization = $patient->intakeForm?->recommended_specialization;
 
-        $therapists = Therapist::query()
-            ->when($recommendedSpecialization, fn($q) =>
-                $q->where('specialization', $recommendedSpecialization)
-            )
-            ->get();
+        // Matched therapists — filtered by recommended specialization
+        $matchedTherapists = Therapist::query()->when($recommendedSpecialization, fn($q) => $q->where('specialization', $recommendedSpecialization))->get();
 
-        return view('patient.matching', compact('therapists', 'recommendedSpecialization'));
+        // All therapists — no filter
+        $allTherapists = Therapist::all();
+
+        $mapTherapist = fn($t) => [
+            'id' => $t->id,
+            'name' => 'Dr. ' . $t->first_name . ' ' . $t->last_name,
+            'specialty' => $t->specialization ?? 'Therapist',
+            'bio' => $t->bio ?? '',
+            'price' => $t->session_fee ?? 0, // ← correct column name
+            'rating' => $t->rating ?? 4.5,
+            'avatarUrl' => null,
+            'tags' => $t->specialization ? [$t->specialization] : [],
+            'matchPercent' => $t->specialization === $recommendedSpecialization ? 95 : null,
+        ];
+
+        $therapistsData = [
+            'matched' => $matchedTherapists->map($mapTherapist)->values()->all(),
+            'all' => $allTherapists->map($mapTherapist)->values()->all(),
+        ];
+
+        return view('patient.matching', compact('therapistsData', 'recommendedSpecialization'));
     }
 
     public function selectTherapist(Request $request)
@@ -95,16 +98,15 @@ class PatientsController extends Controller
         $patient = auth()->guard('patient')->user();
         $patient->update(['therapist_id' => $request->therapist_id]);
 
-        return redirect()->route('patient.booking')
-            ->with('success', 'Therapist selected. You can now book a session.');
+        return redirect()->route('patient.booking')->with('success', 'Therapist selected. You can now book a session.');
     }
 
     public function adminIndex()
     {
-        $patients   = Patient::with('therapist')->latest()->paginate(20);
+        $patients = Patient::with('therapist')->latest()->paginate(20);
         $therapists = Therapist::all();
 
-        return view('admin.manageUsers', compact('patients', 'therapists'));
+        return view('admin.users', compact('patients', 'therapists'));
     }
 
     public function destroy(Patient $patient)
@@ -124,11 +126,7 @@ class PatientsController extends Controller
 
     private function getMood(Patient $patient): ?int
     {
-        return $patient->wellnessRecords
-            ->whereNotNull('mood_score')
-            ->sortByDesc('created_at')
-            ->first()
-            ?->mood_score;
+        return $patient->wellnessRecords->whereNotNull('mood_score')->sortByDesc('created_at')->first()?->mood_score;
     }
 
     private function getUpcomingSessions(Patient $patient)
@@ -142,16 +140,15 @@ class PatientsController extends Controller
 
     private function getCompletedSessions(Patient $patient)
     {
-        return $patient->sessions
-            ->where('status', 'completed')
-            ->sortByDesc('session_time')
-            ->values();
+        return $patient->sessions->where('status', 'completed')->sortByDesc('session_time')->values();
     }
 
     private function getTotalSessions(Patient $patient): int
     {
-        return $patient->sessions
-            ->whereNotIn('status', ['canceled'])
-            ->count();
+        return $patient->sessions->whereNotIn('status', ['canceled'])->count();
     }
+
+    // =========================================================================
+    //  SHOW PROFILE
+    // =========================================================================
 }

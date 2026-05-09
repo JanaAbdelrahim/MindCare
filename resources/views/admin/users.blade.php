@@ -78,7 +78,7 @@
                                     </td>
                                     <td>{{ $patient->condition_level }}</td>
                                     <td>
-                                        <form action="{{ route('admin.patients.destroy', $patient->id) }}"
+                                        <form action="{{ route('users.patients.destroy', $patient->id) }}"
                                             method="POST">
                                             @csrf
                                             @method('DELETE')

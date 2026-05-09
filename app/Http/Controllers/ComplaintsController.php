@@ -11,7 +11,7 @@ class ComplaintsController extends Controller
     {
         $patient = auth()->guard('patient')->user();
 
-        $complaints = Complaint::query()->where('patient_id', $patient->id)
+        $complaints = Complaint::where('patient_id', $patient->id)
             ->orderByDesc('created_at')
             ->get();
 

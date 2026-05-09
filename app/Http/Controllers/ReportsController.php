@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 use App\Models\Report;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
+use App\Models\Patient;
+use App\Models\IntakeForm;
 
 
 class ReportsController extends Controller
@@ -27,7 +29,21 @@ class ReportsController extends Controller
             ->orderByDesc('created_at')
             ->get();
 
-        return view('therapist.reports', compact('reports'));
+        $patients = Patient::all();
+        $intakeForms = IntakeForm::all();
+        $reports = Report::query()
+        ->where('therapist_id', $therapist->id)
+        ->with(['patient', 'intakeForm'])
+        ->orderByDesc('created_at')
+        ->get();
+    
+
+        return view('therapist.reports', compact(
+            'reports',
+            'patients', 
+            'reports', 
+             'intakeForms'
+        ));
     }
 
     // ─────────────────────────────────────────────────────────────────────────
@@ -68,7 +84,16 @@ class ReportsController extends Controller
             ->with('success', 'Report created successfully.');
     }
 
+    // ─────────────────────────────────────────────────────────────────────────
+    // VIEW REPORT DETAIL
+    // ─────────────────────────────────────────────────────────────────────────
 
+    /**
+     * Show a single report's detail page.
+     *
+     * Authorization: only the therapist who created the report can view it.
+     * We use abort(403) instead of a policy for simplicity — suitable for this project size.
+     */
     public function show(Report $report)
     {
         /** @var \App\Models\Therapist $therapist */

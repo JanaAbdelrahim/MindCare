@@ -13,7 +13,7 @@ class SessionsController extends Controller
         /** @var \App\Models\Therapist $therapist */
         $therapist = auth()->guard('therapist')->user();
 
-        $sessions = PatientSession::query()->where('therapist_id', $therapist->id)->with('patient')->orderByDesc('session_time')->get();
+        $sessions = PatientSession::where('therapist_id', $therapist->id)->with('patient')->orderByDesc('session_time')->get();
 
         return view('therapist.sessions', compact('sessions'));
     }

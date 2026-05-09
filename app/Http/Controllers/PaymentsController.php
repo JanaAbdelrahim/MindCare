@@ -35,7 +35,7 @@ class PaymentsController extends Controller
             'payment_method' => ['required', 'in:credit_card,wallet'],
         ]);
 
-        $paid = Payment::query()->where('session_id', $session->id)
+        $paid = Payment::where('session_id', $session->id)
             ->where('status', 'completed')
             ->exists();
 
@@ -48,8 +48,8 @@ class PaymentsController extends Controller
             if ($patient->wallet < $fee) {
                 return redirect()->back()->with('error', 'Insufficient wallet balance.');
             }
-            $patient->query()->decrement('wallet', $fee);
-            $session->therapist->query()->increment('wallet', $fee);
+            $patient->decrement('wallet', $fee);
+            $session->therapist->increment('wallet', $fee);
         }
 
         Payment::create([

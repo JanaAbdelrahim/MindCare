@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MindCare</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <link rel="stylesheet" href="{{ asset('assets/CSS/plugins/all.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/CSS/plugins/bootstrap.min.css') }}">
@@ -119,15 +120,13 @@
                         <p class="time">Thu, Apr 24 • 4:30 PM</p>
                     </div>
                 </div>
-
-                <button class="btn">Book New Session</button>
             </div>
 
 
             <div class="goals-card">
                 <div class="goals-card-header">
                     <h3>Weekly Goals</h3>
-                    <span class="goals-done" id="goalsDone">3/5 done</span>
+                    <span class="goals-done" id="goalsDone">0/4 done</span>
                 </div>
                 <div id="goalsList"></div>
                 <button class="add-goal-btn" id="openAddGoal">+ Add Goal</button>
@@ -198,7 +197,7 @@
         <div class="loader"></div>
     </div>
 
-    <script src="{{ asset('assets/JS/bootstrap.min.js') }}"></script>
+    <script src="{{ asset('assets/JS/plugins/bootstrap.min.js') }}"></script>
     <script src="{{ asset('assets/JS/plugins/jQuery.js') }}"></script>
     <script src="{{ asset('assets/JS/plugins/chart.js') }}"></script>
     <script src="{{ asset('assets/JS/global.js') }}"></script>

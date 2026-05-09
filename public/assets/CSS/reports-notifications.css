@@ -1,0 +1,255 @@
+.work-page {
+    padding: 48px 0;
+}
+
+.work-title {
+    color: #5D768B;
+    font-size: 42px;
+    margin-bottom: 8px;
+}
+
+.work-subtitle {
+    color: #74828a;
+    font-size: 17px;
+    margin-bottom: 0;
+}
+
+.soft-card {
+    background: #FDFCFA;
+    border: 1px solid rgba(93, 118, 139, 0.12);
+    border-radius: 20px;
+    box-shadow: rgba(0, 0, 0, 0.16) 0 3px 8px;
+    padding: 24px;
+}
+
+.metric-card {
+    min-height: 128px;
+}
+
+.metric-card i {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #EDF5FB;
+    color: #5B9DC9;
+    font-size: 19px;
+}
+
+.metric-card .metric {
+    color: #2f3f4b;
+    font-size: 34px;
+    font-weight: 700;
+    margin: 14px 0 2px;
+}
+
+.metric-card .label {
+    color: #74828a;
+    margin: 0;
+}
+
+.mindcare-btn {
+    background: #5D768B;
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    padding: 10px 16px;
+    text-decoration: none;
+}
+
+.mindcare-btn:hover {
+    background: #4d6274;
+    color: #fff;
+}
+
+.mindcare-btn.light {
+    background: #EDF5FB;
+    color: #4b7898;
+}
+
+.mindcare-btn.warning {
+    background: #FFF8ED;
+    color: #A87538;
+}
+
+.mindcare-table {
+    margin-bottom: 0;
+}
+
+.mindcare-table thead th {
+    color: #5B9DC9;
+    font-size: 15px;
+    letter-spacing: 0;
+    border-bottom: 1px solid #e8e1d7;
+}
+
+.mindcare-table tbody td {
+    color: #4f4f4f;
+    padding: 18px 12px;
+    vertical-align: middle;
+    border-bottom: 1px solid #eee7dc;
+}
+
+.status-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 6px 13px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.status-pill.low,
+.status-pill.read {
+    background: #EAF3F0;
+    color: #6B9A8B;
+}
+
+.status-pill.medium,
+.status-pill.unread {
+    background: #FFF8ED;
+    color: #A87538;
+}
+
+.status-pill.high {
+    background: #FFEFE2;
+    color: #B5653D;
+}
+
+.status-pill.severe {
+    background: #FFE5E5;
+    color: #C74747;
+}
+
+.notification-item {
+    display: grid;
+    grid-template-columns: 48px 1fr auto;
+    gap: 16px;
+    align-items: start;
+    padding: 18px 0;
+    border-bottom: 1px solid #eee7dc;
+}
+
+.notification-item:last-child {
+    border-bottom: 0;
+}
+
+.notification-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #EDF5FB;
+    color: #5B9DC9;
+}
+
+.notification-item.unread .notification-icon {
+    background: #FFF8ED;
+    color: #A87538;
+}
+
+.notification-message {
+    color: #354650;
+    margin-bottom: 6px;
+    line-height: 1.55;
+}
+
+.muted-meta {
+    color: #83919a;
+    font-size: 14px;
+}
+
+.empty-state {
+    padding: 44px 20px;
+    text-align: center;
+    color: #74828a;
+}
+
+.empty-state i {
+    width: 62px;
+    height: 62px;
+    border-radius: 18px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #EDF5FB;
+    color: #5B9DC9;
+    font-size: 24px;
+    margin-bottom: 14px;
+}
+
+.form-label {
+    color: #5a5c6b;
+    font-weight: 600;
+}
+
+.form-control,
+.form-select {
+    border: 1px solid #dfd7cc;
+    border-radius: 12px;
+    padding: 10px 12px;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: #5D768B;
+    box-shadow: 0 0 0 0.2rem rgba(93, 118, 139, 0.16);
+}
+
+.report-detail-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.detail-box {
+    background: #F8EFE5;
+    border-radius: 16px;
+    padding: 16px;
+}
+
+.detail-box span {
+    color: #74828a;
+    display: block;
+    font-size: 14px;
+    margin-bottom: 4px;
+}
+
+.detail-box strong {
+    color: #354650;
+}
+
+@media (max-width: 767px) {
+    .work-page {
+        padding: 28px 0;
+    }
+
+    .work-title {
+        font-size: 32px;
+    }
+
+    .soft-card {
+        padding: 18px;
+    }
+
+    .notification-item {
+        grid-template-columns: 42px 1fr;
+    }
+
+    .notification-item form,
+    .notification-item .status-pill {
+        grid-column: 2;
+        justify-self: start;
+    }
+
+    .report-detail-grid {
+        grid-template-columns: 1fr;
+    }
+}

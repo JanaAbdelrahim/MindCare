@@ -68,8 +68,19 @@
     <script src="{{ asset('assets/JS/plugins/bootstrap.min.js') }}"></script>
     <script src="{{ asset('assets/JS/plugins/jQuery.js') }}"></script>
     <script src="{{ asset('assets/JS/global.js') }}"></script>
+
+    {{-- Pass real backend data to matching.js --}}
+    <script>
+        let MATCHING_DATA = {
+            recommended: @json($recommendedSpecialization),
+            therapists:  @json($therapistsData)
+        };
+
+        let SELECT_THERAPIST_URL = "{{ route('patient.matching.select') }}";
+        let CSRF_TOKEN = "{{ csrf_token() }}";
+    </script>
+
     <script src="{{ asset('assets/JS/matching.js') }}"></script>
-    {{-- <script src="app.js"></script> --}}
 </body>
 
 </html>

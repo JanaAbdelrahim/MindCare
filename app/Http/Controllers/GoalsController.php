@@ -12,7 +12,7 @@ class GoalsController extends Controller
         /** @var \App\Models\Patient $patient */
         $patient = auth()->guard('patient')->user();
 
-        $goals = Goal::query()->where('patient_id', $patient->id)
+        $goals = Goal::where('patient_id', $patient->id)
             ->orderByDesc('created_at')
             ->get();
 
@@ -29,7 +29,7 @@ class GoalsController extends Controller
         /** @var \App\Models\Patient $patient */
         $patient = auth()->guard('patient')->user();
 
-        Goal::query()->create([
+        Goal::create([
             'patient_id'  => $patient->id,
             'description' => $request->description,
             'target_days' => $request->target_days ?? 5,

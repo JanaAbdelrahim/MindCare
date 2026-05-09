@@ -1,62 +1,132 @@
+// ─── Swiper init ─────────────────────────────────────────────────────────────
 let swiper = new Swiper(".swiper", {
     spaceBetween: 30,
     speed: 1000,
     allowTouchMove: false,
     autoHeight: true,
 });
-$(".next").click(function () {
-    let activeSlide = $(swiper.slides[swiper.activeIndex]),
-        selectedChoice = activeSlide.find(".choice.selected");
 
-    if(selectedChoice.length == 0){
-        $(".next").attr("disabled", true);
-    } else{
-        $(".next").attr("disabled", false);
-    }
+// ─── Collect answers in memory ────────────────────────────────────────────────
+// { questionId: optionId }
+let answers = {};
 
-    swiper.slideNext();
-});
-$(".prev").click(function () {
-    swiper.slidePrev();
-});
-
+// ─── Helpers ─────────────────────────────────────────────────────────────────
 let totalQuestions = $(".swiper-slide").length;
 
+function activeSlide() {
+    return $(swiper.slides[swiper.activeIndex]);
+}
+
+function isLastSlide() {
+    return swiper.activeIndex === totalQuestions - 1;
+}
+
+function isAnswered(slide) {
+    let qId = slide.data("question-id");
+    return answers[qId] !== undefined;
+}
+
 function updateUI() {
-    let current = swiper.activeIndex + 1,
-        activeSlide = $(swiper.slides[swiper.activeIndex]),
-        category = activeSlide.data("category"),
-        categoryIndex = activeSlide.data("category-index"),
-        categoryTotal = activeSlide.data("category-total"),
+    let slide = activeSlide(),
+        current = swiper.activeIndex + 1,
+        category = slide.data("category"),
+        catIndex = slide.data("category-index"),
+        catTotal = slide.data("category-total"),
         progress = (current / totalQuestions) * 100;
 
     $(".questionCount").text(`Question (${current}/${totalQuestions})`);
-    $(".progress").css("width",progress + "%");
-    $(".categoryCount").text(`${category}(${categoryIndex}/${categoryTotal})`);
-    if(swiper.activeIndex == 0){
-        $(".prev").attr("disabled", true);
-    }else{
-        $(".prev").attr("disabled", false);
+    $(".categoryCount").text(`${category} (${catIndex}/${catTotal})`);
+    $(".progress").css("width", progress + "%");
+
+    // Restore selected state visually for this slide
+    let qId = slide.data("question-id");
+    slide.find(".choice").removeClass("selected");
+    if (answers[qId]) {
+        slide.find(`.choice[data-option-id="${answers[qId]}"]`).addClass("selected");
     }
-    if(activeSlide.find(".choice.selected").length > 0){
-        $(".next").attr("disabled", false);
-    } else{
-        $(".next").attr("disabled", true);
-    }
-    if(swiper.activeIndex == totalQuestions - 1){
-        $(".next").text("Submit");
-    }else{
-        $(".next").text("Next");
-    }
+
+    // Prev button
+    $(".prev").prop("disabled", swiper.activeIndex === 0);
+
+    // Next / Submit button
+    let answered = isAnswered(slide);
+    $(".next")
+        .prop("disabled", !answered)
+        .html(
+            isLastSlide()
+                ? 'Submit <i class="fa-solid fa-check"></i>'
+                : 'Next <i class="fa-solid fa-angle-right"></i>'
+        );
 }
 
-updateUI();
+// ─── Choice click ─────────────────────────────────────────────────────────────
+$(document).on("click", ".choice", function () {
+    let slide = activeSlide(),
+        qId = slide.data("question-id"),
+        optionId = $(this).data("option-id");
 
-swiper.on("slideChange", function () {
-    updateUI();
-});
-$(".choice").click(function () {
-    $(this).siblings().removeClass("selected");
+    answers[qId] = optionId;
+
+    slide.find(".choice").removeClass("selected");
     $(this).addClass("selected");
+
     updateUI();
 });
+
+// ─── Navigation ──────────────────────────────────────────────────────────────
+$(".prev").on("click", function () {
+    swiper.slidePrev();
+});
+
+$(".next").on("click", function () {
+    if (!isAnswered(activeSlide())) return;
+
+    if (isLastSlide()) {
+        submitForm();
+    } else {
+        swiper.slideNext();
+    }
+});
+
+swiper.on("slideChange", updateUI);
+
+// ─── Submit ───────────────────────────────────────────────────────────────────
+function submitForm() {
+    // Build answers array: [{question_id, option_id}, ...]
+    let payload = Object.entries(answers).map(([qId, optId]) => ({
+        question_id: parseInt(qId),
+        option_id: parseInt(optId),
+    }));
+
+    $(".next").prop("disabled", true).html(
+        '<span class="spinner-border spinner-border-sm me-1"></span> Submitting...'
+    );
+
+    $.ajax({
+        url: INTAKE_SUBMIT_URL,
+        method: "POST",
+        contentType: "application/json",
+    
+        xhrFields: {
+            withCredentials: true
+        },
+        headers: {
+            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+            "Accept": "application/json",
+        },
+        data: JSON.stringify({ answers: payload }),
+        success: function (res) {
+            if (res.success && res.redirect) {
+                window.location.href = res.redirect;
+            }
+        },
+        error: function (xhr) {
+            let msg = xhr.responseJSON?.message || "Something went wrong. Please try again.";
+            alert(msg);
+            $(".next").prop("disabled", false).html('Submit <i class="fa-solid fa-check"></i>');
+        },
+    });
+}
+
+// ─── Init ────────────────────────────────────────────────────────────────────
+updateUI();

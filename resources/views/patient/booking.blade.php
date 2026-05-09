@@ -70,6 +70,10 @@
                 </div>
             </div>
 
+            <!-- Feedback messages -->
+            <div id="booking-error"   style="display:none; background:#fde8e8; color:#c0392b; border-radius:8px; padding:10px 14px; margin-bottom:12px; font-size:14px;"></div>
+            <div id="booking-success" style="display:none; background:#e8f8f0; color:#1e7e50; border-radius:8px; padding:10px 14px; margin-bottom:12px; font-size:14px;"></div>
+
             <!-- Proceed Button -->
             <button class="proceed-btn" id="proceed-btn" disabled>
                 Select a slot to continue
@@ -85,6 +89,17 @@
     <script src="{{ asset('assets/JS/plugins/bootstrap.min.js') }}"></script>
     <script src="{{ asset('assets/JS/plugins/jQuery.js') }}"></script>
     <script src="{{ asset('assets/JS/global.js') }}"></script>
+
+    {{-- Pass backend data to booking.js --}}
+    <script>
+        const BOOKING_DATA = {
+            therapist: @json($therapistData),
+            slots:     @json($slotsData)
+        };
+        const BOOKING_STORE_URL = "{{ route('patient.booking.store') }}";
+        const CSRF_TOKEN        = "{{ csrf_token() }}";
+    </script>
+
     <script src="{{ asset('assets/JS/booking.js') }}"></script>
 </body>
 
