@@ -7,6 +7,7 @@
     <title>MindCare</title>
     <link rel="shortcut icon" href="{{ asset('assets/Images/favIcon.png') }}" type="image/x-icon">
 
+    <link rel="stylesheet" href="{{ asset('assets/CSS/plugins/all.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/CSS/plugins/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/CSS/plugins/fonts.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/CSS/global.css') }}">
@@ -17,10 +18,10 @@
 
     @include('shared.nav')
 
-    <header class="site-header">
+    <header class="site-header mt-5">
         <div class="container text-center">
             <h1 class="header-title">
-                Find the right therapist<br>
+                Find the right therapist
                 <span class="header-accent">for you</span>
             </h1>
         </div>

@@ -3,9 +3,10 @@
      padding: 0; 
 }
 body {
-     
      background: #f8efe5!important;
      color: #5D768B !important; 
+     min-height: 100vh;
+     position: relative;
 }
 
 
@@ -155,6 +156,13 @@ body {
      color: #aaa; 
      cursor: not-allowed; 
 }
+
+footer{
+     position: absolute;
+     bottom: 0;
+     width: 100%;
+}
+
 @media (min-width: 320px) and (max-width: 992px){}
 @media (min-width: 371px) and (max-width: 992px){}
 @media (min-width: 577px) and (max-width: 992px){}

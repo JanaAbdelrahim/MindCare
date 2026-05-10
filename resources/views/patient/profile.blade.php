@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="{{ asset('assets/CSS/plugins/all.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/CSS/plugins/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/CSS/plugins/fonts.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/CSS/global.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/CSS/style.css') }}">
 </head>
 
@@ -17,9 +18,8 @@
 
     @include('shared.nav')
 
-    <div class="profile my-5 pt-5">
+    <div class="profile my-5">
         <div class="container">
-
 
             @if (session('success'))
                 <div class="alert alert-success alert-dismissible fade show mb-4" role="alert">

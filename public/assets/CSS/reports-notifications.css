@@ -1,11 +1,27 @@
-.work-page {
-    padding: 48px 0;
+body {
+    background: #f8efe5 !important;
+    color: #5D768B !important;
+    min-height: 100vh;
+    position: relative;
 }
 
+
 .work-title {
+    width: fit-content;
+    padding-bottom: 15px;
+    position: relative;
     color: #5D768B;
-    font-size: 42px;
-    margin-bottom: 8px;
+    text-align: center;
+}
+
+.work-title::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 5px;
+    background: linear-gradient(to right, transparent, #4d6274, transparent);
 }
 
 .work-subtitle {
@@ -226,6 +242,12 @@
     color: #354650;
 }
 
+footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}
+
 @media (max-width: 767px) {
     .work-page {
         padding: 28px 0;
@@ -233,6 +255,7 @@
 
     .work-title {
         font-size: 32px;
+        margin-inline: auto;
     }
 
     .soft-card {

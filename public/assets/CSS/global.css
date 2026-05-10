@@ -132,14 +132,11 @@ body::-webkit-scrollbar-thumb {
 }
 
 #mainNav {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    z-index: 10;
     padding: 10px 30px;
     transition: background 0.4s ease, padding 0.4s ease, box-shadow 0.4s ease;
-    /* height: 70px; */
+    background-color: rgba(35, 58, 78, .7);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
 }
 
 #mainNav .navbar-brand {
@@ -148,13 +145,6 @@ body::-webkit-scrollbar-thumb {
     color: #F8EFE5;
     letter-spacing: 1px;
     transition: color 0.4s ease;
-}
-
-#mainNav.scrolled {
-    background-color: rgba(35, 58, 78, .6);
-    -webkit-backdrop-filter: blur(10px);
-    backdrop-filter: blur(10px);
-    box-shadow: 0 2px 24px rgba(93, 118, 139, 0.08);
 }
 
 #mainNav .navbar-brand span {
@@ -204,6 +194,7 @@ body::-webkit-scrollbar-thumb {
     padding: 10px 16px !important;
     margin-right: 0px;
     transition: background 0.4s ease;
+    cursor: pointer;
 }
 
 #mainNav .btn-nav-cta::after {
@@ -212,7 +203,7 @@ body::-webkit-scrollbar-thumb {
 
 #mainNav .btn-nav-cta:hover,
 #mainNav .btn-nav-cta.show {
-    background: rgb(93, 118, 139) !important;
+    background: rgb(169, 151, 131) !important;
     color: #fff !important;
 }
 
@@ -272,6 +263,7 @@ body::-webkit-scrollbar-thumb {
     text-align: center;
     font-size: 15px;
     margin: 0px;
+    color: rgb(248, 246, 243);
 }
 
 .footer-bottom .social {
@@ -300,7 +292,7 @@ body::-webkit-scrollbar-thumb {
 
 @media (min-width: 320px) and (max-width: 992px) {
     #mainNav .navbar-toggler {
-        border: 2px solid var(--main2-color);
+        border: 2px solid rgb(200, 179, 155);
         outline: none;
         box-shadow: none;
     }
@@ -314,7 +306,7 @@ body::-webkit-scrollbar-thumb {
 
     #mainNav.scrolled .nav-link,
     #mainNav .nav-link {
-        color: var(--dark-color);
+        color: rgb(35, 58, 78);
         width: fit-content;
     }
 

@@ -9,12 +9,13 @@
     <link rel="stylesheet" href="{{ asset('assets/CSS/plugins/all.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/CSS/plugins/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/CSS/plugins/fonts.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/CSS/global.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/CSS/style.css') }}">
 </head>
 
 <body>
-   @include('shared.nav')
-    <div class="profile my-5 pt-5">
+    @include('shared.nav')
+    <div class="profile my-5">
         <div class="container">
             <div class="row">
                 <div class="col-md-5 col-lg-4 col-xxl-3 part1 ">
@@ -134,6 +135,8 @@
             </div>
         </div>
     </div>
+
+    @include('shared.footer')
 
     <div class="loadingPage">
         <div class="loader"></div>

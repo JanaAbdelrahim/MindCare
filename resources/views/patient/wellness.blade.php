@@ -20,8 +20,8 @@
 
     <div class="container main dashboard">
 
-        <div class="heading">
-            <h2>Good afternoon, sunshine</h2>
+        <div class="heading mt-5">
+            <h2 class="fs-1">Good afternoon, sunshine</h2>
             <p>How are you feeling today?</p>
         </div>
 

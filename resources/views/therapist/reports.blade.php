@@ -15,7 +15,7 @@
 
 <body>
     @include('shared.nav')
-    <main class="work-page">
+    <main class="work-page my-5">
         <div class="container">
             <div class="d-flex flex-column flex-lg-row justify-content-between gap-3 align-items-lg-end mb-4">
                 <div>
@@ -181,6 +181,8 @@
             </div>
         </div>
     </main>
+
+    @include('shared.footer')
 
     <div class="loadingPage">
         <div class="loader"></div>
