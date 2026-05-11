@@ -7,6 +7,7 @@
     <title>MindCare</title>
     <link rel="shortcut icon" href="{{ asset('assets/Images/favIcon.png') }}" type="image/x-icon">
 
+    <link rel="stylesheet" href="{{ asset('assets/CSS/plugins/all.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/CSS/plugins/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/CSS/plugins/fonts.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/CSS/global.css') }}">
@@ -19,11 +20,7 @@
     <div class="page">
         <div class="container">
 
-            <div class="Back">
-                <button class="back-btn" onclick="history.back()">← Back to therapists</button>
-            </div>
-
-            <div class="doctor-card">
+            <div class="doctor-card mt-5">
                 <div class="doc-avatar" id="doc-avatar">NG</div>
                 <div class="doc-info">
                     <h2 id="doc-name"></h2>

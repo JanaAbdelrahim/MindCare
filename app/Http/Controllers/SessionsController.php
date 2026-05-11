@@ -59,7 +59,19 @@ class SessionsController extends Controller
 
         return redirect()->back()->with('success', 'Session status updated.');
     }
+    public function show(PatientSession $session)
+    {
+        /** @var \App\Models\Patient $patient */
+        $patient = auth()->guard('patient')->user();
 
+        if ($session->patient_id !== $patient->id) {
+            abort(403);
+        }
+
+        $session->load('therapist');
+
+        return view('patient.session', compact('session'));
+    }
     /**
      * Patient: waiting room for a session.
      */

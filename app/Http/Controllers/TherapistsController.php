@@ -11,19 +11,29 @@ use App\Models\PatientSession;
 
 class TherapistsController extends Controller
 {
-    public function index()
+    
+    public function profile()
     {
         /** @var Therapist $therapist */
         $therapist = auth()
             ->guard('therapist')
             ->user()
             ->load(['sessions.patient']);
+
         $name = $therapist->first_name . ' ' . $therapist->last_name;
         $avgRating = $this->getAvgRating($therapist);
         $todaySessions = $this->getTodaySessions($therapist);
         $activePatients = $this->getActivePatients($therapist);
-
-        return view('therapist.profile', compact('name', 'avgRating', 'todaySessions', 'activePatients', 'therapist'));
+        $allPatients = Patient::whereHas('sessions', function ($q) use ($therapist) {
+            $q->where('therapist_id', $therapist->id);
+        })
+            ->withCount([
+                'sessions as session_count' => function ($q) use ($therapist) {
+                    $q->where('therapist_id', $therapist->id);
+                },
+            ])
+            ->get();
+        return view('therapist.profile', compact('name', 'avgRating', 'todaySessions', 'activePatients', 'therapist', 'allPatients'));
     }
 
     private function getAvgRating(Therapist $therapist): float
@@ -46,16 +56,6 @@ class TherapistsController extends Controller
     public function dashboard()
     {
         return $this->index();
-    }
-
-    public function profile()
-    {
-        /** @var Therapist $therapist */
-        $therapist = auth()
-            ->guard('therapist')
-            ->user()
-            ->load(['sessions.patient']);
-        return view('therapist.profile', compact('therapist'));
     }
 
     public function updateProfile(Request $request)
@@ -119,21 +119,17 @@ class TherapistsController extends Controller
 
     public function adminDashboard()
     {
-        $totalTherapists  = Therapist::count('id');
-        $totalPatients    = Patient::count('id');
+        $totalTherapists = Therapist::count('id');
+        $totalPatients = Patient::count('id');
         //----------------------->ethar?
-        $totalSessions    = PatientSession::count('id');
+        $totalSessions = PatientSession::count('id');
         $recentTherapists = Therapist::latest()->take(5)->get();
-        $recentSessions = PatientSession::with(['patient', 'therapist'])->latest()->take(5)->get();
+        $recentSessions = PatientSession::with(['patient', 'therapist'])
+            ->latest()
+            ->take(5)
+            ->get();
 
-
-        return view('admin.dashboard', compact(
-        'totalTherapists',
-        'totalPatients',
-        'totalSessions',
-        'recentTherapists',
-        'recentSessions' 
-    ));
+        return view('admin.dashboard', compact('totalTherapists', 'totalPatients', 'totalSessions', 'recentTherapists', 'recentSessions'));
 
         return view('admin.dashboard', compact('totalTherapists', 'totalPatients', 'totalSessions', 'recentTherapists', 'recentSessions'));
     }
@@ -169,7 +165,10 @@ class TherapistsController extends Controller
     }
     public function selectTherapist(Request $request)
     {
-        auth()->guard('patient')->user()->update([
+        auth()
+            ->guard('patient')
+            ->user()
+            ->update([
                 'therapist_id' => $request->therapist_id,
             ]);
 

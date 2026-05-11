@@ -6,18 +6,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MindCare</title>
     <link rel="shortcut icon" href="{{ asset('assets/Images/favIcon.png') }}" type="image/x-icon">
-
     <link rel="stylesheet" href="{{ asset('assets/CSS/plugins/all.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/CSS/plugins/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/CSS/plugins/fonts.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/CSS/global.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/CSS/style.css') }}">
 </head>
 
 <body>
 
+
     @include('shared.nav')
 
-    <div class="profile my-5 pt-5">
+    <div class="profile my-5">
+
         <div class="container">
 
 
@@ -41,10 +43,13 @@
 
             <div class="row">
 
+
                 <div class="col-md-5 col-lg-4 col-xxl-3 part1">
 
                     <div class="item">
+
                         <div class="box">
+
                             <div class="profile-avatar">
                                 {{ strtoupper(substr($patient->first_name, 0, 1)) }}{{ strtoupper(substr($patient->last_name, 0, 1)) }}
                                 <i class="fa-solid fa-pen"></i>
@@ -54,18 +59,31 @@
                                 {{ $patient->first_name }} {{ $patient->last_name }}
                             </h3>
                             <p class="text-center">Patient since {{ $patient->created_at->format('F Y') }}</p>
+
                             <form action="{{ route('patient.profile.update') }}" method="POST">
                                 @csrf
+                                @method('PUT')
 
                                 <div class="mt-3">
-                                    <label for="FullName" class="input-label text-start mb-2">Full Name</label>
-                                    <input type="text" name="full Name" id="FullName"
+                                    <label for="FirstName" class="input-label text-start mb-2">First Name</label>
+                                    <input type="text" name="first_name" id="FirstName"
                                         class="form-control @error('first_name') is-invalid @enderror"
-                                        value="{{ old('first_name', $patient->first_name), old('last_name', $patient->last_name) }}">
-                                    @error('first_name' || 'last_name')
+                                        value="{{ old('first_name', $patient->first_name) }}">
+                                    @error('first_name')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
+
+                                <div class="mt-3">
+                                    <label for="LastName" class="input-label text-start mb-2">Last Name</label>
+                                    <input type="text" name="last_name" id="LastName"
+                                        class="form-control @error('last_name') is-invalid @enderror"
+                                        value="{{ old('last_name', $patient->last_name) }}">
+                                    @error('last_name')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
                                 <div class="mt-3">
                                     <label for="Email" class="input-label text-start mb-2">Email</label>
                                     <input type="email" name="email" id="Email"
@@ -89,6 +107,13 @@
                                     @enderror
                                 </div>
 
+                                <div class="mt-3">
+                                    <label for="PasswordConfirm" class="input-label text-start mb-2">Confirm
+                                        Password</label>
+                                    <input type="password" name="password_confirmation" id="PasswordConfirm"
+                                        class="form-control" placeholder="••••••••">
+                                </div>
+
                                 <div class="mt-4 btns">
                                     <button type="submit" class="btn w-100">EDIT</button>
                                 </div>
@@ -97,11 +122,11 @@
                         </div>
                     </div>
                 </div>
+
                 <div class="col-md-7 col-lg-8 col-xxl-9 part2">
                     <div class="item">
 
                         <div class="row mb-3">
-
                             <div class="col-md-4 mt-3 mt-md-0">
                                 <div class="box">
                                     <i class="fa-regular fa-circle-check first"></i>
@@ -129,10 +154,9 @@
                                 <div class="box">
                                     <i class="fa-regular fa-heart third"></i>
                                     <p>MOOD STREAK</p>
-                                    <h3>{{ $mood ?? '—' }}</h3>
+                                    <h3>{{ $moodStreak > 0 ? ' ' . $moodStreak . ' days' : '—' }}</h3>
                                 </div>
                             </div>
-
                         </div>
 
                         <div class="schedule">
@@ -174,8 +198,6 @@
                         </div>
                     </div>
                 </div>
-
-
 
             </div>
         </div>

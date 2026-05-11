@@ -47,14 +47,10 @@ body {
 ───────────────────────────────────────────────── */
 
 
-.site-header {
- 
-  padding: 20px 0;  
-}
  h1{
   color: var(--text);
   width: fit-content;
-  padding-bottom: 8px;
+  padding-bottom: 15px;
   position: relative;
   display: inline-block;
 }

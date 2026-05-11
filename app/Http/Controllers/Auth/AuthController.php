@@ -14,7 +14,7 @@ class AuthController extends Controller
     {
         // Redirect already-authenticated users away from the login page
         if (Auth::guard('patient')->check()) {
-            return redirect()->route('patient.intake');
+            return redirect()->route('patient.profile');
         }
 
         if (Auth::guard('therapist')->check()) {
@@ -68,7 +68,7 @@ class AuthController extends Controller
 
             return $this->successResponse(
                 $request,
-                route('patient.intake')
+                route('patient.profile')
             );
         }
 

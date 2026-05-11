@@ -13,7 +13,8 @@
 </head>
 <body>
     @include('shared.nav')
-    <main class="work-page">
+
+    <main class="work-page my-5">
         <div class="container">
             <div class="mb-4">
                 <h1 class="work-title">Availability Slots</h1>
@@ -79,7 +80,12 @@
             </div>
         </div>
     </main>
-    <div class="loadingPage"><div class="loader"></div></div>
+
+    @include('shared.footer')
+
+    <div class="loadingPage">
+        <div class="loader"></div>
+    </div>
     <script src="{{ asset('assets/JS/plugins/bootstrap.min.js') }}"></script>
     <script src="{{ asset('assets/JS/plugins/jQuery.js') }}"></script>
     <script src="{{ asset('assets/JS/global.js') }}"></script>

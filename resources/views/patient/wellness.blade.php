@@ -7,7 +7,6 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>MindCare</title>
     <link rel="shortcut icon" href="{{ asset('assets/Images/favIcon.png') }}" type="image/x-icon">
-
     <link rel="stylesheet" href="{{ asset('assets/CSS/plugins/all.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/CSS/plugins/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/CSS/plugins/fonts.css') }}">
@@ -20,9 +19,18 @@
 
     <div class="container main dashboard">
 
-        <div class="heading">
-            <h2>Good afternoon, sunshine</h2>
-            <p>How are you feeling today?</p>
+        <div class="heading mt-5">
+            <h2 class="fs-1">
+                Good {{ now()->hour < 12 ? 'morning' : (now()->hour < 17 ? 'afternoon' : 'evening') }},
+                {{ $patient->first_name }}!
+            </h2>
+            <p>
+                @if ($moodStreak > 0)
+                    🔥 {{ $moodStreak }}-day streak! Keep it up!
+                @else
+                    How are you feeling today?
+                @endif
+            </p>
         </div>
 
         <div class="left">
@@ -71,23 +79,17 @@
                     <button class="write-btn" id="openWriteModal">+ Write</button>
                 </div>
                 <div class="journal-entries" id="journalEntries">
-                    <div class="journal-entry">
-                        <p class="entry-date">Today · Wednesday, April 22</p>
-                        <p class="entry-text">Feeling much better today after the session. The breathing exercises
-                            really
-                            helped with the morning anxiety. I'm going to try the thought records worksheet Dr. Hassan
-                            shared…</p>
-                    </div>
-                    <div class="journal-entry">
-                        <p class="entry-date">Tuesday, April 21</p>
-                        <p class="entry-text">Rough morning but managed to complete the meditation. Noticing patterns in
-                            when anxiety peaks — seems related to work deadlines.</p>
-                    </div>
-                    <div class="journal-entry">
-                        <p class="entry-date">Monday, April 20</p>
-                        <p class="entry-text">Good day overall. Took the long route home for a walk. Felt more grounded
-                            in the evening.</p>
-                    </div>
+                    @forelse ($journals as $journal)
+                        <div class="journal-entry">
+                            <p class="entry-date">
+                                {{ $journal->created_at->isToday() ? 'Today · ' : '' }}
+                                {{ $journal->created_at->format('l, F j') }}
+                            </p>
+                            <p class="entry-text">{{ Str::limit($journal->journal_entry, 150) }}</p>
+                        </div>
+                    @empty
+                        <p class="text-muted" style="padding: 1rem;">No journal entries yet.</p>
+                    @endforelse
                 </div>
             </div>
 
@@ -100,22 +102,23 @@
                     <span class="icon"><i class="fa-regular fa-calendar-days"></i></span>
                     <h3>Upcoming Sessions</h3>
                 </div>
-                <div class="session">
-                    <div class="avatar">SC</div>
-                    <div class="info">
-                        <h4>Dr. Sarah Chen</h4>
-                        <p class="type">Anxiety &amp; Stress</p>
-                        <p class="time">Today • 2:00 PM</p>
+                @forelse ($upcomingSessions as $session)
+                    <div class="session">
+                        <div class="avatar">
+                            {{ strtoupper(substr($session->therapist->first_name, 0, 1)) }}{{ strtoupper(substr($session->therapist->last_name, 0, 1)) }}
+                        </div>
+                        <div class="info">
+                            <h4>Dr. {{ $session->therapist->first_name }} {{ $session->therapist->last_name }}</h4>
+                            <p class="type">{{ $session->therapist->specialization ?? 'Therapist' }}</p>
+                            <p class="time">
+                                {{ \Carbon\Carbon::parse($session->session_time)->isToday() ? 'Today' : \Carbon\Carbon::parse($session->session_time)->format('D, M j') }}
+                                • {{ \Carbon\Carbon::parse($session->session_time)->format('g:i A') }}
+                            </p>
+                        </div>
                     </div>
-                </div>
-                <div class="session">
-                    <div class="avatar">MT</div>
-                    <div class="info">
-                        <h4>Dr. Michael Torres</h4>
-                        <p class="type">Depression</p>
-                        <p class="time">Thu, Apr 24 • 4:30 PM</p>
-                    </div>
-                </div>
+                @empty
+                    <p class="text-muted" style="padding: 1rem;">No upcoming sessions.</p>
+                @endforelse
             </div>
 
             <div class="goals-card">

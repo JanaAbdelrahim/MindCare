@@ -9,11 +9,10 @@
 
 const CSRF   = document.querySelector('meta[name="csrf-token"]')?.content ?? '';
 const ROUTES = {
-    mood:    '/wellness/mood',
-    journal: '/wellness/journal',
-    chart:   '/wellness/chart',
+    mood:    '/patient/wellness/mood',
+    journal: '/patient/wellness/journal',
+    chart:   '/patient/wellness/chart',
 };
-
 // ─────────────────────────────────────────────────────────────────────────────
 //  Helpers
 // ─────────────────────────────────────────────────────────────────────────────

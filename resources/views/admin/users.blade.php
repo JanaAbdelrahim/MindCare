@@ -10,13 +10,15 @@
     <link rel="stylesheet" href="{{ asset('assets/CSS/plugins/all.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/CSS/plugins/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/CSS/plugins/fonts.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/CSS/global.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/CSS/style.css') }}">
 </head>
 
 <body>
 
     @include('shared.nav')
-    <div class="adminDashboard pt-5">
+
+    <div class="adminDashboard my-5">
         <div class="container">
             <h2 class="title mb-5 fs-1">Therapist Management</h2>
             <div class="users my-5">

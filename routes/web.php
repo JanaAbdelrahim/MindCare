@@ -65,21 +65,24 @@ Route::middleware(['auth.patient'])
         Route::post('/payment/{session}', [PaymentsController::class, 'process'])->name('payment.process');
 
         // ── Waiting Room ──────────────────────────────────────────────────────────
-        Route::get('/waiting-room/{session}', [SessionsController::class, 'waitingRoom'])->name('waiting-room');
+        Route::get('/waitingRoom/{session}', [SessionsController::class, 'waitingRoom'])->name('waitingRoom');
 
         Route::get('/wellness', [WellnessRecordsController::class, 'index'])->name('wellness');
-
+        // ── Session Room ──────────────────────────────────────────────────────────────
+        Route::get('/session/{session}', [SessionsController::class, 'show'])->name('session.room');
         // ── Mood ───────────────────────────────────────────────────────────────
         Route::post('/wellness/mood', [WellnessRecordsController::class, 'storeMood'])->name('wellness.mood.store');
-
+        Route::post('/sessions/{sessionId}/chat', [SessionsController::class, 'sendMessage']);
+        Route::get('/sessions/{sessionId}/chat', [SessionsController::class, 'getMessages']);
+        Route::post('/sessions/{sessionId}/mute', [SessionsController::class, 'toggleMute']);
         // ── Journal ────────────────────────────────────────────────────────────
         Route::post('/wellness/journal', [WellnessRecordsController::class, 'storeJournal'])->name('wellness.journal.store');
 
         // ── Chart data (AJAX) ──────────────────────────────────────────────────
         Route::get('/wellness/chart', [WellnessRecordsController::class, 'chartData'])->name('wellness.chart');
         // ── Complaints ────────────────────────────────────────────────────────────
-        Route::get('/complaints', [ComplaintsController::class, 'index'])->name('users.complaints');
-        Route::post('/complaints', [ComplaintsController::class, 'store'])->name('users.complaints.store');
+        Route::get('/complaints', [ComplaintsController::class, 'index'])->name('complaints');
+        Route::post('/complaints', [ComplaintsController::class, 'store'])->name('complaints.store');
 
         // ── Notifications ─────────────────────────────────────────────────────────
         Route::get('/notifications', [NotificationsController::class, 'index'])->name('users.notifications');

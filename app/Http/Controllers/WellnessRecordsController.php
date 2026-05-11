@@ -9,23 +9,33 @@ use Illuminate\Support\Carbon;
 
 class WellnessRecordsController extends Controller
 {
-    public function index()
-    {
-        /** @var \App\Models\Patient $patient */
-        $patient = auth()->guard('patient')->user();
+public function index()
+{
+    /** @var \App\Models\Patient $patient */
+    $patient = auth()->guard('patient')->user()
+                     ->load(['sessions.therapist']);
 
-        // Last 10 journal entries
-        $journals = WellnessRecord::where('patient_id', $patient->id)
-            ->journals()
-            ->orderByDesc('created_at')
-            ->limit(10)
-            ->get();
+    $journals = WellnessRecord::where('patient_id', $patient->id)
+        ->journals()
+        ->orderByDesc('created_at')
+        ->limit(10)
+        ->get();
 
-        // Mood chart — last 7 days
-        $chartData = $this->buildChartData($patient->id);
+    $chartData = $this->buildChartData($patient->id);
 
-        return view('patient.wellness', compact('journals', 'chartData'));
-    }
+    // Upcoming sessions
+    $upcomingSessions = $patient->sessions
+        ->whereIn('status', ['scheduled', 'pending'])
+        ->where('session_time', '>=', now())
+        ->sortBy('session_time')
+        ->take(3)
+        ->values();
+
+    // Mood streak
+    $moodStreak = $this->calcMoodStreak($patient->id);
+
+    return view('patient.wellness', compact('journals', 'chartData', 'upcomingSessions', 'moodStreak', 'patient'));
+}
 
     // =========================================================================
     //  MOOD
@@ -152,4 +162,23 @@ class WellnessRecordsController extends Controller
             'progress_percent' => $goal->progress_percent_attribute ?? min((int)(($goal->current / $goal->total) * 100), 100),
         ];
     }
+    private function calcMoodStreak(int $patientId): int
+{
+    $streak = 0;
+    $day = now()->startOfDay();
+
+    while (true) {
+        $exists = WellnessRecord::where('patient_id', $patientId)
+            ->whereNotNull('mood_score')
+            ->whereDate('created_at', $day)
+            ->exists();
+
+        if (!$exists) break;
+
+        $streak++;
+        $day = $day->subDay();
+    }
+
+    return $streak;
+}
 }

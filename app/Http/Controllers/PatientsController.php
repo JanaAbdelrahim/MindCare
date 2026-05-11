@@ -18,7 +18,7 @@ class PatientsController extends Controller
             ->guard('patient')
             ->user()
             ->load(['sessions.therapist', 'wellnessRecords']);
-
+        $moodStreak = $this->getMoodStreak($patient);
         $name = $patient->first_name . ' ' . $patient->last_name;
         $nextSession = $this->getNextSession($patient);
         $mood = $this->getMood($patient);
@@ -26,10 +26,27 @@ class PatientsController extends Controller
         $completedSessions = $this->getCompletedSessions($patient);
         $totalSessions = $this->getTotalSessions($patient);
 
-        return view('patient.profile', compact('patient', 'name', 'nextSession', 'mood', 'upcomingSessions', 'completedSessions', 'totalSessions'));
+        return view('patient.profile', compact('patient', 'name', 'nextSession', 'mood', 'moodStreak', 'upcomingSessions', 'completedSessions', 'totalSessions'));
     }
 
+    private function getMoodStreak(Patient $patient): int
+    {
+        $streak = 0;
+        $day = now()->startOfDay();
 
+        while (true) {
+            $exists = $patient->wellnessRecords->whereNotNull('mood_score')->filter(fn($r) => \Carbon\Carbon::parse($r->created_at)->isSameDay($day))->isNotEmpty();
+
+            if (!$exists) {
+                break;
+            }
+
+            $streak++;
+            $day = $day->subDay();
+        }
+
+        return $streak;
+    }
     public function updateProfile(Request $request)
     {
         /** @var Patient $patient */
@@ -104,8 +121,8 @@ class PatientsController extends Controller
     public function adminIndex()
     {
         $patients = Patient::with(['therapist', 'sessions'])
-        ->latest()
-        ->paginate(20);
+            ->latest()
+            ->paginate(20);
         $therapists = Therapist::all();
 
         return view('admin.users', compact('patients', 'therapists'));

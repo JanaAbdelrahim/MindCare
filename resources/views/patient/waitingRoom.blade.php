@@ -6,8 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MindCare</title>
     <link rel="shortcut icon" href="{{ asset('assets/Images/favIcon.png') }}" type="image/x-icon">
-
     <link rel="stylesheet" href="{{ asset('assets/CSS/plugins/all.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/CSS/plugins/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/CSS/plugins/fonts.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/CSS/global.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/CSS/waitingRoom.css') }}">
@@ -41,17 +41,22 @@
                 <div class="doctor-card">
                     <div class="doc-profile">
                         <div class="doc-meta">
-                            <div class="avatar">LH</div>
+                            <div class="avatar">
+                                {{ strtoupper(substr($session->therapist->first_name, 0, 1)) }}{{ strtoupper(substr($session->therapist->last_name, 0, 1)) }}
+                            </div>
                             <div class="doc-name">
-                                <h3>Dr. Laila Hassan</h3>
-                                <p>Psychologist · Anxiety specialist</p>
+                                <h3>Dr. {{ $session->therapist->first_name }} {{ $session->therapist->last_name }}</h3>
+                                <p>{{ $session->therapist->specialization ?? 'Therapist' }}</p>
                             </div>
                         </div>
-                        <div class="status-badge">Waiting</div>
+                        <div class="status-badge">{{ ucfirst($session->status) }}</div>
                     </div>
                     <div class="schedule-info">
                         <span class="label">Scheduled</span>
-                        <span class="time">Thu, Apr 24 · 11:00 AM</span>
+                        <span class="time">
+                            {{ \Carbon\Carbon::parse($session->session_time)->format('D, M j') }}
+                            · {{ \Carbon\Carbon::parse($session->session_time)->format('g:i A') }}
+                        </span>
                     </div>
                 </div>
 
@@ -76,9 +81,9 @@
         <div class="loader"></div>
     </div>
 
+    <script src="{{ asset('assets/JS/plugins/bootstrap.min.js') }}"></script>
     <script src="{{ asset('assets/JS/plugins/jQuery.js') }}"></script>
     <script src="{{ asset('assets/JS/global.js') }}"></script>
-
 </body>
 
 </html>

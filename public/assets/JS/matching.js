@@ -45,7 +45,6 @@ function renderCard(t, idx, showMatch) {
   return `
     <div class="col-12 col-md-6 col-lg-4">
       <div class="therapist-card">
-        ${matchBadge}
         <div class="card-header-row">
           ${avatar}
           <div class="doctor-info">

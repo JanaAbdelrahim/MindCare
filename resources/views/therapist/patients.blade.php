@@ -15,10 +15,11 @@
 
 <body>
     @include('shared.nav')
-    <main class="work-page">
+
+    <main class="work-page my-5">
         <div class="container">
             <div class="d-flex flex-column flex-md-row justify-content-between gap-3 align-items-md-end mb-4">
-                <div>
+                <div class="">
                     <h1 class="work-title">My Patients</h1>
                     <p class="work-subtitle">Patients connected through your sessions.</p>
                 </div>
@@ -62,6 +63,9 @@
             </div>
         </div>
     </main>
+
+    @include('shared.footer')
+
     <div class="loadingPage">
         <div class="loader"></div>
     </div>
