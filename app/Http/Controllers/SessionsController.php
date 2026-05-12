@@ -27,7 +27,6 @@ class SessionsController extends Controller
 
         return view('therapist.session', compact('session'));
     }
-
    
     public function updateNotes(Request $request, PatientSession $session)
     {

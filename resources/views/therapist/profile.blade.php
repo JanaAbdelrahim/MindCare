@@ -117,7 +117,7 @@
                                             <div class="info">
                                                 <h5>{{ $session->patient->first_name }} {{ $session->patient->last_name }}</h5>
                                                 <p>
-                                                    {{ $session->session_time->format('g:i A') }} | 
+                                                    {{ $session->session_time->setTimezone('Africa/Cairo')->format('g:i A') }} | 
                                                     50 min | Video 
                                                     {{ ucfirst($session->patient->condition_level ?? 'General') }}
                                                 </p>

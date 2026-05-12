@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,6 +12,7 @@
     <link rel="stylesheet" href="{{ asset('assets/CSS/global.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/CSS/reports-notifications.css') }}">
 </head>
+
 <body>
     @include('shared.nav')
 
@@ -31,11 +33,13 @@
                             @csrf
                             <div class="mb-3">
                                 <label class="form-label" for="start_time">Start time</label>
-                                <input class="form-control" type="datetime-local" id="start_time" name="start_time" required>
+                                <input class="form-control" type="datetime-local" id="start_time" name="start_time"
+                                    required>
                             </div>
                             <div class="mb-3">
                                 <label class="form-label" for="end_time">End time</label>
-                                <input class="form-control" type="datetime-local" id="end_time" name="end_time" required>
+                                <input class="form-control" type="datetime-local" id="end_time" name="end_time"
+                                    required>
                             </div>
                             <button class="mindcare-btn w-100" type="submit">Add Slot</button>
                         </form>
@@ -53,26 +57,33 @@
                                         <th>ACTION</th>
                                     </tr>
                                 </thead>
-                            <tbody>
-                                @forelse ($slots as $slot)
-                                    <tr>
-                                        <td>{{ $slot->start_time->format('M d, Y h:i A') }}</td>
-                                        <td>{{ $slot->end_time->format('M d, Y h:i A') }}</td>
-                                        <td><span class="status-pill {{ $slot->status === 'available' ? 'read' : 'unread' }}">{{ ucfirst($slot->status) }}</span></td>
-                                        <td>
-                                            <form method="POST" action="{{ route('therapist.slots.destroy', $slot) }}">
-                                            @csrf
-                                            @method('DELETE')
-                                                <button class="mindcare-btn warning" type="submit">
-                                                    Delete
-                                                </button>
-                                            </form>
+                                <tbody>
+                                    @forelse ($slots as $slot)
+                                        <tr>
+                                            <td>{{ $slot->start_time->setTimezone('Africa/Cairo')->format('M d, Y h:i A') }}
                                             </td>
-                                    </tr>
-                                @empty
-                                    <tr><td colspan="4">No slots added yet.</td></tr>
-                                @endforelse
-                            </tbody>
+                                            <td>{{ $slot->end_time->setTimezone('Africa/Cairo')->format('M d, Y h:i A') }}
+                                            </td>
+                                            <td><span
+                                                    class="status-pill {{ $slot->status === 'available' ? 'read' : 'unread' }}">{{ ucfirst($slot->status) }}</span>
+                                            </td>
+                                            <td>
+                                                <form method="POST"
+                                                    action="{{ route('therapist.slots.destroy', $slot) }}">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button class="mindcare-btn warning" type="submit">
+                                                        Delete
+                                                    </button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="4">No slots added yet.</td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
                             </table>
                         </div>
                     </section>
@@ -90,4 +101,5 @@
     <script src="{{ asset('assets/JS/plugins/jQuery.js') }}"></script>
     <script src="{{ asset('assets/JS/global.js') }}"></script>
 </body>
+
 </html>

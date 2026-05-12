@@ -14,7 +14,6 @@
             line-height: 1.6;
         }
 
-        /* ── Header ── */
         .header {
             background: #5D768B;
             color: #fff;
@@ -24,7 +23,6 @@
         .header h1 { font-size: 22px; margin-bottom: 4px; }
         .header p  { font-size: 13px; opacity: .85; }
 
-        /* ── Content ── */
         .content { padding: 28px 36px; }
 
         .section-title {
@@ -38,7 +36,6 @@
             margin-bottom: 14px;
         }
 
-        /* ── Two-column grid ── */
         .grid { width: 100%; margin-bottom: 24px; }
         .grid td { width: 50%; vertical-align: top; padding-right: 16px; }
         .grid td:last-child { padding-right: 0; }
@@ -54,7 +51,6 @@
         .field .label { font-size: 11px; color: #83919a; text-transform: uppercase; letter-spacing: .4px; }
         .field .value { font-size: 13px; color: #354650; font-weight: 600; }
 
-        /* ── Status pill ── */
         .pill {
             display: inline-block;
             padding: 3px 12px;
@@ -67,7 +63,6 @@
         .pill-high   { background: #FFEFE2; color: #B5653D; }
         .pill-severe { background: #FFE5E5; color: #C74747; }
 
-        /* ── Notes ── */
         .notes-box {
             background: #F8F5F1;
             border-left: 4px solid #5D768B;
@@ -79,7 +74,6 @@
             word-wrap: break-word;
         }
 
-        /* ── Footer ── */
         .footer {
             margin-top: 36px;
             padding-top: 14px;
@@ -96,7 +90,7 @@
     <div class="header">
         <h1>MindCare — Clinical Report</h1>
         <p>Generated {{ $report->created_at?->format('F d, Y') }} &nbsp;|&nbsp;
-           Therapist: Dr. {{ $report->therapist?->first_name }} {{ $report->therapist?->last_name }}</p>
+        Therapist: Dr. {{ $report->therapist?->first_name }} {{ $report->therapist?->last_name }}</p>
     </div>
 
     <div class="content">
@@ -154,7 +148,6 @@
             </tr>
         </table>
 
-        {{-- Clinical Notes --}}
         <div class="section-title">Clinical Notes</div>
         <div class="notes-box">{{ $report->notes ?: 'No clinical notes recorded for this report.' }}</div>
 
