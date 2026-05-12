@@ -12,6 +12,7 @@ use Carbon\Carbon;
 
 class BookingController extends Controller
 {
+    
     public function getTherapistWithSlots(Request $request)
     {
         $request->validate([

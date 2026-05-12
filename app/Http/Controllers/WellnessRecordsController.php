@@ -37,13 +37,7 @@ public function index()
     return view('patient.wellness', compact('journals', 'chartData', 'upcomingSessions', 'moodStreak', 'patient'));
 }
 
-    // =========================================================================
-    //  MOOD
-    // =========================================================================
-
-    /**
-     * Save today's mood (one per day; updates if already exists).
-     */
+  
     public function storeMood(Request $request)
     {
         $request->validate([
@@ -82,13 +76,8 @@ public function index()
         ]);
     }
 
-    // =========================================================================
-    //  JOURNAL
-    // =========================================================================
-
-    /**
-     * Save a new journal entry.
-     */
+    
+   
     public function storeJournal(Request $request)
     {
         $request->validate([
@@ -139,18 +128,16 @@ public function index()
         for ($i = 6; $i >= 0; $i--) {
             $day      = now()->subDays($i);
             $key      = $day->format('Y-m-d');
-            $labels[] = $day->format('D');          // Mon, Tue, …
+            $labels[] = $day->format('D');         
             $data[]   = isset($records[$key])
                 ? $records[$key]->mood_score
-                : null;                             // null = gap in chart
+                : null;                            
         }
 
         return compact('labels', 'data');
     }
 
-    /**
-     * Shape a PatientGoal into a consistent JSON resource.
-     */
+   
     private function goalResource(PatientGoal $goal): array
     {
         return [

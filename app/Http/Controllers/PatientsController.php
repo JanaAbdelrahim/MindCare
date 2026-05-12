@@ -11,6 +11,7 @@ use Illuminate\Validation\Rule;
 
 class PatientsController extends Controller
 {
+
     public function index()
     {
         /** @var Patient $patient */
@@ -165,7 +166,5 @@ class PatientsController extends Controller
         return $patient->sessions->whereNotIn('status', ['canceled'])->count();
     }
 
-    // =========================================================================
-    //  SHOW PROFILE
-    // =========================================================================
+
 }

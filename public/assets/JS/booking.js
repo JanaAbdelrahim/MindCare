@@ -1,10 +1,6 @@
-// ─────────────────────────────────────────────────────────────────────────────
-// booking.js — uses BOOKING_DATA injected by booking.blade.php
-// ─────────────────────────────────────────────────────────────────────────────
 
-let selectedSlot = null; // { id, label, datetime }
+let selectedSlot = null; 
 
-// ── Helpers ───────────────────────────────────────────────────────────────────
 function showError(msg) {
     const el = document.getElementById('booking-error');
     if (!el) return;
@@ -20,7 +16,6 @@ function showSuccess(msg) {
     el.style.display = 'block';
 }
 
-// ── Render doctor card ────────────────────────────────────────────────────────
 function renderDoctor(t) {
     document.getElementById('doc-avatar').textContent    = t.initials;
     document.getElementById('doc-name').textContent      = t.name;
@@ -32,7 +27,6 @@ function renderDoctor(t) {
         t.price + ' ' + t.currency;
 }
 
-// ── Render slots ──────────────────────────────────────────────────────────────
 function renderSlots(slots) {
     const allGrid   = document.getElementById('all-slots');
     const availGrid = document.getElementById('avail-slots');
@@ -60,7 +54,6 @@ function renderSlots(slots) {
     });
 }
 
-// ── Select a slot ─────────────────────────────────────────────────────────────
 function selectSlot(el, slot) {
     document.querySelectorAll('#avail-slots .slot').forEach(e => {
         e.className = 'slot available';
@@ -76,7 +69,6 @@ function selectSlot(el, slot) {
     btn.textContent   = 'Confirm Booking →';
 }
 
-// ── Submit booking ────────────────────────────────────────────────────────────
 async function submitBooking() {
     if (!selectedSlot) return;
 
@@ -108,7 +100,6 @@ async function submitBooking() {
             return;
         }
 
-        // ── success: redirect to payment ──────────────────────────────────────
         showSuccess('Session booked! Redirecting to payment… 💳');
         btn.textContent = '✓ Booked';
 
@@ -123,7 +114,6 @@ async function submitBooking() {
     }
 }
 
-// ── Entry point ───────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
     if (typeof BOOKING_DATA === 'undefined') {
         console.error('[booking.js] BOOKING_DATA is not defined.');

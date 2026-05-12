@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 
 class SessionsController extends Controller
 {
+
     public function index()
     {
         /** @var \App\Models\Therapist $therapist */
@@ -27,9 +28,7 @@ class SessionsController extends Controller
         return view('therapist.session', compact('session'));
     }
 
-    /**
-     * Therapist: update session notes.
-     */
+   
     public function updateNotes(Request $request, PatientSession $session)
     {
         /** @var \App\Models\Therapist $therapist */
@@ -48,9 +47,7 @@ class SessionsController extends Controller
         return redirect()->back()->with('success', 'Notes updated.');
     }
 
-    /**
-     * Therapist: update session status.
-     */
+    
     public function updateStatus(Request $request, PatientSession $session)
     {
         /** @var \App\Models\Therapist $therapist */
@@ -81,9 +78,7 @@ class SessionsController extends Controller
 
         return view('patient.session', compact('session'));
     }
-    /**
-     * Patient: waiting room for a session.
-     */
+  
     public function waitingRoom(PatientSession $session)
     {
         /** @var \App\Models\Patient $patient */

@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 
 class AvailabilitySlotsController extends Controller
 {
+    
     public function index()
     {
         /** @var \App\Models\Therapist $therapist */

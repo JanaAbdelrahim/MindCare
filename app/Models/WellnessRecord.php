@@ -20,7 +20,6 @@ class WellnessRecord extends Model
         'sleep_quality' => 'float',
     ];
 
-    // ── Labels ────────────────────────────────────────────────────────────────
     public const MOOD_LABELS = [
         1 => 'Very Sad',
         2 => 'Sad',
@@ -34,13 +33,11 @@ class WellnessRecord extends Model
         return self::MOOD_LABELS[$this->mood_score] ?? null;
     }
 
-    // ── Relationships ─────────────────────────────────────────────────────────
     public function patient()
     {
         return $this->belongsTo(Patient::class, 'patient_id');
     }
 
-    // ── Scopes ────────────────────────────────────────────────────────────────
     public function scopeJournals(Builder $query): Builder
     {
         return $query->whereNotNull('journal_entry');

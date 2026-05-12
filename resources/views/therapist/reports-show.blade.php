@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MindCare – Report Detail</title>
+    <title>MindCare – Report</title>
     <link rel="stylesheet" href="{{ asset('assets/CSS/plugins/all.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/CSS/plugins/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/CSS/plugins/fonts.css') }}">
@@ -16,6 +16,7 @@
     <main class="work-page my-5">
         <div class="container">
 
+            {{-- Header --}}
             <div class="d-flex flex-column flex-lg-row justify-content-between gap-3 align-items-lg-end mb-4">
                 <div>
                     <h1 class="work-title">Report Detail</h1>
@@ -36,6 +37,7 @@
 
             <div class="row g-4">
 
+                {{-- Patient & Score Info --}}
                 <div class="col-md-6">
                     <div class="soft-card h-100">
                         <h3 class="mb-4">Patient Information</h3>
@@ -61,6 +63,7 @@
                     </div>
                 </div>
 
+                {{-- Assessment --}}
                 <div class="col-md-6">
                     <div class="soft-card h-100">
                         <h3 class="mb-4">Assessment</h3>
@@ -83,6 +86,7 @@
                     </div>
                 </div>
 
+                {{-- Notes --}}
                 <div class="col-12">
                     <div class="soft-card">
                         <h3 class="mb-3">Clinical Notes</h3>

@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Models\Report;
 use App\Models\IntakeForm;
 use Illuminate\Http\Request;
@@ -15,14 +16,13 @@ class TherapistsController extends Controller
     public function profile()
     {
         /** @var Therapist $therapist */
-        $therapist = auth()
-            ->guard('therapist')
-            ->user()
-            ->load(['sessions.patient']);
-        $name = $therapist->first_name . ' ' . $therapist->last_name;
-        $avgRating = $this->getAvgRating($therapist);
-        $todaySessions = $this->getTodaySessions($therapist);
+        $therapist = auth()->guard('therapist')->user()->load(['sessions.patient']);
+
+        $name           = $therapist->first_name . ' ' . $therapist->last_name;
+        $avgRating      = $this->getAvgRating($therapist);
+        $todaySessions  = $this->getTodaySessions($therapist);
         $activePatients = $this->getActivePatients($therapist);
+
         $allPatients = Patient::whereHas('sessions', function ($q) use ($therapist) {
             $q->where('therapist_id', $therapist->id);
         })
@@ -32,7 +32,10 @@ class TherapistsController extends Controller
                 },
             ])
             ->get();
-        return view('therapist.profile', compact('name', 'avgRating', 'todaySessions', 'activePatients', 'therapist', 'allPatients'));
+
+        return view('therapist.profile', compact(
+            'name', 'avgRating', 'todaySessions', 'activePatients', 'therapist', 'allPatients'
+        ));
     }
 
     private function getAvgRating(Therapist $therapist): float
@@ -42,7 +45,11 @@ class TherapistsController extends Controller
 
     private function getTodaySessions(Therapist $therapist)
     {
-        return $therapist->sessions()->whereDate('session_time', today())->with('patient')->orderBy('session_time')->get();
+        return $therapist->sessions()
+            ->whereDate('session_time', today())
+            ->with('patient')
+            ->orderBy('session_time')
+            ->get();
     }
 
     private function getActivePatients(Therapist $therapist): int
@@ -52,24 +59,19 @@ class TherapistsController extends Controller
         })->count();
     }
 
-    public function dashboard()
-    {
-        return $this->index();
-    }
-
     public function updateProfile(Request $request)
     {
         /** @var Therapist $therapist */
         $therapist = auth()->guard('therapist')->user();
 
         $validated = $request->validate([
-            'first_name' => ['required', 'string', 'max:255'],
-            'last_name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', Rule::unique('therapists')->ignore($therapist->id)],
+            'first_name'   => ['required', 'string', 'max:255'],
+            'last_name'    => ['required', 'string', 'max:255'],
+            'email'        => ['required', 'email', Rule::unique('therapists')->ignore($therapist->id)],
             'specialization' => ['nullable', 'string', 'max:255'],
-            'language' => ['nullable', 'string', 'max:100'],
-            'session_fee' => ['nullable', 'numeric', 'min:0'],
-            'password' => ['nullable', 'string', 'min:8', 'confirmed'],
+            'language'     => ['nullable', 'string', 'max:100'],
+            'session_fee'  => ['nullable', 'numeric', 'min:0'],
+            'password'     => ['nullable', 'string', 'min:8', 'confirmed'],
         ]);
 
         if (!empty($validated['password'])) {
@@ -90,7 +92,6 @@ class TherapistsController extends Controller
         $patients = Patient::whereHas('sessions', function ($q) use ($therapist) {
             $q->where('therapist_id', $therapist->id);
         })
-
             ->with([
                 'sessions' => function ($q) use ($therapist) {
                     $q->where('therapist_id', $therapist->id)->orderBy('session_time', 'desc');
@@ -106,22 +107,24 @@ class TherapistsController extends Controller
         /** @var Therapist $therapist */
         $therapist = auth()->guard('therapist')->user();
 
-        $isMyPatient = PatientSession::where('therapist_id', $therapist->id)->where('patient_id', $patient->id)->exists();
+        $isMyPatient = PatientSession::where('therapist_id', $therapist->id)
+            ->where('patient_id', $patient->id)
+            ->exists();
 
         if (!$isMyPatient) {
             abort(403, 'Unauthorized access.');
         }
 
-        $patient->load(['sessions', 'wellnessRecords', 'goals', 'intakeForm']);
+        // Load only existing relationships (Goal model doesn't exist)
+        $patient->load(['sessions', 'wellnessRecords', 'intakeForm']);
 
-        // كانت بتبعت patient و therapist بس — الـ view بيحتاج reports و patients و intakeForms
         $reports = Report::where('patient_id', $patient->id)
             ->where('therapist_id', $therapist->id)
             ->with(['patient', 'intakeForm'])
             ->orderByDesc('created_at')
             ->get();
 
-        $patients = collect([$patient]); // لو الـ view بيعرض patient واحد بس
+        $patients    = collect([$patient]);
         $intakeForms = IntakeForm::where('patient_id', $patient->id)->get();
 
         return view('therapist.reports', compact('reports', 'patients', 'intakeForms'));
@@ -129,35 +132,39 @@ class TherapistsController extends Controller
 
     public function adminDashboard()
     {
-        $totalTherapists = Therapist::count('id');
-        $totalPatients = Patient::count('id');
-        //----------------------->ethar?
-        $totalSessions = PatientSession::count('id');
+        $totalTherapists = Therapist::count();
+        $totalPatients   = Patient::count();
+        $totalSessions   = PatientSession::count();
+
         $recentTherapists = Therapist::latest()->take(5)->get();
-        $recentSessions = PatientSession::with(['patient', 'therapist'])
+        $recentSessions   = PatientSession::with(['patient', 'therapist'])
             ->latest()
             ->take(5)
             ->get();
 
-        return view('admin.dashboard', compact('totalTherapists', 'totalPatients', 'totalSessions', 'recentTherapists', 'recentSessions'));
+        return view('admin.dashboard', compact(
+            'totalTherapists', 'totalPatients', 'totalSessions',
+            'recentTherapists', 'recentSessions'
+        ));
     }
 
     public function adminIndex()
     {
-        $patients = Patient::with('sessions')->latest()->get();
+        $patients   = Patient::with('sessions')->latest()->get();
         $therapists = Therapist::with('sessions')->latest()->get();
         return view('admin.users', compact('patients', 'therapists'));
     }
+
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'first_name' => ['required', 'string', 'max:255'],
-            'last_name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', Rule::unique('therapists')],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'first_name'     => ['required', 'string', 'max:255'],
+            'last_name'      => ['required', 'string', 'max:255'],
+            'email'          => ['required', 'email', Rule::unique('therapists')],
+            'password'       => ['required', 'string', 'min:8', 'confirmed'],
             'specialization' => ['required', 'string', 'max:255'],
-            'language' => ['nullable', 'string', 'max:100'],
-            'session_fee' => ['nullable', 'numeric', 'min:0'],
+            'language'       => ['nullable', 'string', 'max:100'],
+            'session_fee'    => ['nullable', 'numeric', 'min:0'],
         ]);
 
         $validated['password'] = Hash::make($validated['password']);
@@ -168,17 +175,15 @@ class TherapistsController extends Controller
 
     public function destroy(Therapist $therapist)
     {
-        $therapist->delete($therapist->id);
+        $therapist->delete();
         return redirect()->back()->with('success', 'Therapist deleted successfully!');
     }
+
     public function selectTherapist(Request $request)
     {
-        auth()
-            ->guard('patient')
-            ->user()
-            ->update([
-                'therapist_id' => $request->therapist_id,
-            ]);
+        auth()->guard('patient')->user()->update([
+            'therapist_id' => $request->therapist_id,
+        ]);
 
         return response()->json([
             'redirect' => route('patient.booking'),
