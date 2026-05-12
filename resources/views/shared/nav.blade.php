@@ -69,100 +69,115 @@
                                 ->first();
                         @endphp
                         @if ($nextNav)
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('patient.waitingRoom', $nextNav->id) }}">Waiting Room</a>
+                            <a class="nav-link" href="{{ route('patient.waitingRoom', $nextNav->id) }}">Waiting Room</a>
+                        @endif
                     </li>
-                @endif
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ route('patient.complaints') }}">Send Complaint</a>
-                </li>
-                <div class="d-flex">
                     <li class="nav-item">
-                        <div class="nav-link btn-nav-cta" onclick="openPopUp('notifications')">
-                            <i class="fa-solid fa-bell"></i>
-                        </div>
+                        <a class="nav-link" href="{{ route('patient.complaints') }}">Send Complaint</a>
                     </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link btn-nav-cta dropdown-toggle" href="#" role="button"
-                            data-bs-toggle="dropdown" aria-expanded="false">
-                            {{ auth('patient')->user()->first_name }}
-                            <i class="fa-solid fa-user"></i>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li>
-                                <a class="dropdown-item" href="{{ route('patient.profile') }}">Profile</a>
-                            </li>
-                            <form action="{{ route('logout') }}" method="POST">
-                                @csrf
+                    <div class="d-flex">
+                        <li class="nav-item">
+                            <div class="nav-link btn-nav-cta" onclick="openPopUp('notifications')">
+                                <i class="fa-solid fa-bell"></i>
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link btn-nav-cta dropdown-toggle" href="#" role="button"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                {{ auth('patient')->user()->first_name }}
+                                <i class="fa-solid fa-user"></i>
+                            </a>
+                            <ul class="dropdown-menu">
                                 <li>
-                                    <a class="dropdown-item" href="#"
-                                        onclick="event.preventDefault(); this.closest('form').submit();">
-                                        Logout <i class="fa-solid fa-arrow-right-from-bracket"></i>
-                                    </a>
+                                    <a class="dropdown-item" href="{{ route('patient.profile') }}">Profile</a>
                                 </li>
-                            </form>
-                        </ul>
-                    </li>
-                </div>
+                                <form action="{{ route('logout') }}" method="POST">
+                                    @csrf
+                                    <li>
+                                        <a class="dropdown-item" href="#"
+                                            onclick="event.preventDefault(); this.closest('form').submit();">
+                                            Logout <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                                        </a>
+                                    </li>
+                                </form>
+                            </ul>
+                        </li>
+                    </div>
 
-                {{-- ==================== THERAPIST ==================== --}}
-            @elseif (auth('therapist')->check())
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ route('home') }}">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ route('therapist.patients') }}">Patients</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ route('therapist.slots') }}">Availability Slots</a>
-                </li>
-                <div class="d-flex">
+                    {{-- ==================== THERAPIST ==================== --}}
+                @elseif (auth('therapist')->check())
                     <li class="nav-item">
-                        <div class="nav-link btn-nav-cta" onclick="openPopUp('notifications')">
-                            <i class="fa-solid fa-bell"></i>
-                        </div>
+                        <a class="nav-link" href="{{ route('home') }}">Home</a>
                     </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link btn-nav-cta dropdown-toggle" href="#" role="button"
-                            data-bs-toggle="dropdown" aria-expanded="false">
-                            {{ auth('therapist')->user()->first_name }}
-                            <i class="fa-solid fa-user"></i>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li>
-                                <a class="dropdown-item" href="{{ route('therapist.profile') }}">Profile</a>
-                            </li>
-                            <form action="{{ route('logout') }}" method="POST">
-                                @csrf
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('therapist.patients') }}">Patients</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('therapist.slots') }}">Availability Slots</a>
+                    </li>
+                    <li class="nav-item">
+                        @php
+                            $nowSession = auth('therapist')
+                                ->user()
+                                ->sessions()
+                                ->where('status', 'scheduled')
+                                ->where('session_time', '<=', now())
+                                ->where('session_time', '>=', now()->subMinutes(50))
+                                ->exists();
+                        @endphp
+                        @if ($nowSession)
+                            <a class="nav-link" href="{{ route('therapist.sessions') }}">Sessions</a>
+                        @else
+                            <span class="nav-link disabled text-muted"
+                                style="pointer-events: none; opacity: 0.5;">Sessions</span>
+                        @endif
+                    </li>
+                    <div class="d-flex">
+                        <li class="nav-item">
+                            <div class="nav-link btn-nav-cta" onclick="openPopUp('notifications')">
+                                <i class="fa-solid fa-bell"></i>
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link btn-nav-cta dropdown-toggle" href="#" role="button"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                {{ auth('therapist')->user()->first_name }}
+                                <i class="fa-solid fa-user"></i>
+                            </a>
+                            <ul class="dropdown-menu">
                                 <li>
-                                    <a class="dropdown-item" href="#"
-                                        onclick="event.preventDefault(); this.closest('form').submit();">
-                                        Logout <i class="fa-solid fa-arrow-right-from-bracket"></i>
-                                    </a>
+                                    <a class="dropdown-item" href="{{ route('therapist.profile') }}">Profile</a>
                                 </li>
-                            </form>
-                        </ul>
-                    </li>
-                </div>
+                                <form action="{{ route('logout') }}" method="POST">
+                                    @csrf
+                                    <li>
+                                        <a class="dropdown-item" href="#"
+                                            onclick="event.preventDefault(); this.closest('form').submit();">
+                                            Logout <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                                        </a>
+                                    </li>
+                                </form>
+                            </ul>
+                        </li>
+                    </div>
 
-                {{-- ==================== GUEST ==================== --}}
-            @else
-                <li class="nav-item">
-                    <a class="nav-link" href="#home">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#about">About</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#services">Services</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#FAQ">FAQ</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link btn-nav-cta" href="{{ route('register') }}">Get Started</a>
-                </li>
+                    {{-- ==================== GUEST ==================== --}}
+                @else
+                    <li class="nav-item">
+                        <a class="nav-link" href="#home">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#about">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#services">Services</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#FAQ">FAQ</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link btn-nav-cta" href="{{ route('register') }}">Get Started</a>
+                    </li>
                 @endif
 
             </ul>
@@ -171,8 +186,30 @@
 </nav>
 
 <div class="popUp list notifications" onclick="closePopUp()">
-    <div class="box">
+    <div class="box" onclick="event.stopPropagation()">
         <i class="fa-solid fa-xmark close" onclick="closePopUp()"></i>
-        <h2 class="title">Notifications</h2>
+        <h2 class="title">
+            Notifications
+            <span class="notif-badge" id="notif-badge" style="display:none;"></span>
+        </h2>
+        <div id="notif-list" class="notif-list">
+            <div class="notif-loading">Loading…</div>
+        </div>
     </div>
 </div>
+
+<script>
+    @if (session('admin_logged_in'))
+        window.NOTIF_URL = "{{ route('admin.notifications.fetch') }}";
+        window.NOTIF_READ_URL = null;
+        window.NOTIF_IS_PATIENT = false;
+    @elseif (auth('patient')->check())
+        window.NOTIF_URL = "{{ route('patient.notifications.fetch') }}";
+        window.NOTIF_READ_URL = "{{ url('patient/notifications') }}/__id__/read";
+        window.NOTIF_IS_PATIENT = true;
+    @elseif (auth('therapist')->check())
+        window.NOTIF_URL = "{{ route('therapist.notifications.fetch') }}";
+        window.NOTIF_READ_URL = null;
+        window.NOTIF_IS_PATIENT = false;
+    @endif
+</script>

@@ -13,9 +13,18 @@ class SessionsController extends Controller
         /** @var \App\Models\Therapist $therapist */
         $therapist = auth()->guard('therapist')->user();
 
-        $sessions = PatientSession::where('therapist_id', $therapist->id)->with('patient')->orderByDesc('session_time')->get();
+        $session = PatientSession::where('therapist_id', $therapist->id)
+            ->where('status', 'scheduled')
+            ->where('session_time', '<=', now())
+            ->where('session_time', '>=', now()->subMinutes(50))
+            ->with(['patient'])
+            ->first();
 
-        return view('therapist.sessions', compact('sessions'));
+        if (!$session) {
+            return redirect()->route('therapist.profile')->with('error', 'No active session right now.');
+        }
+
+        return view('therapist.session', compact('session'));
     }
 
     /**

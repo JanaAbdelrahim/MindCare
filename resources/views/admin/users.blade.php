@@ -20,6 +20,7 @@
 
     <div class="adminDashboard my-5">
         <div class="container">
+
             <h2 class="title mb-5 fs-1">Therapist Management</h2>
             <div class="users my-5">
                 <h3 class="mb-4">All Therapists</h3>
@@ -51,8 +52,7 @@
                                         @endif
                                     </td>
                                     <td>
-                                        <form action="{{ route('admin.therapist.destroy', $therapist->id) }}"
-                                            method="POST">
+                                        <form action="{{ route('admin.therapist.destroy', $therapist->id) }}" method="POST">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn">Remove User</button>
@@ -64,6 +64,7 @@
                     </table>
                 </div>
             </div>
+
             <h2 class="title my-5 fs-1">Patient Management</h2>
             <div class="users patients my-5">
                 <h3 class="mb-4">All Patients</h3>
@@ -81,48 +82,82 @@
                         </thead>
                         <tbody>
                             @foreach ($patients as $patient)
+                                @php
+                                    $patientComplaints = $complaints->where('patient_id', $patient->id);
+                                @endphp
                                 <tr>
                                     <td>{{ $patient->first_name }} {{ $patient->last_name }}</td>
                                     <td>{{ $patient->age }}</td>
-                                    <td>{{ $patient->therapist ? 'Dr. ' . $patient->therapist->first_name . ' ' . $patient->therapist->last_name : 'No Therapist' }}
-                                    </td>
+                                    <td>{{ $patient->therapist ? 'Dr. ' . $patient->therapist->first_name . ' ' . $patient->therapist->last_name : 'No Therapist' }}</td>
                                     <td>{{ $patient->condition_level }}</td>
                                     <td>
-                                        <form action="{{ route('admin.patient.destroy', $patient->id) }}"
-                                            method="POST">
+                                        <form action="{{ route('admin.patient.destroy', $patient->id) }}" method="POST">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn">Remove User</button>
                                         </form>
                                     </td>
-                                    <td><button class="btn view" onclick="openPopUp('list')">View</button></td>
+                                    <td>
+                                        @if ($patientComplaints->isNotEmpty())
+                                            <button class="btn view"
+                                                onclick="openComplaintsPopup({{ $patient->id }})">
+                                                View ({{ $patientComplaints->count() }})
+                                            </button>
+                                        @else
+                                            <span class="text-muted" style="font-size:13px;">None</span>
+                                        @endif
+                                    </td>
                                 </tr>
                             @endforeach
                         </tbody>
                     </table>
                 </div>
             </div>
+
         </div>
     </div>
 
-    @if ($complaints->isEmpty())
-        <h4 class="mb-2 text-muted">No complaints</h4>
-    @else
-        @foreach ($complaints as $complaint)
-            <h4 class="mb-2">
-                <i class="fa-solid fa-circle-dot"></i>
-                {{ $complaint->description }}
-            </h4>
-        @endforeach
-    @endif
+    <div class="popUp complaints" id="complaintsPopup" onclick="closePopUp()">
+        <div class="box" onclick="event.stopPropagation()">
+            <i class="fa-solid fa-xmark close" onclick="closePopUp()"></i>
+            <h2 class="title">Patient Complaints</h2>
+            <div id="complaints-content"></div>
+        </div>
+    </div>
+
+
     <div class="loadingPage">
         <div class="loader"></div>
     </div>
-
-    <script src="{{ asset('assets/JS/plugins/bootstrap.min.js') }}"></script>
+<script src="{{ asset('assets/JS/plugins/bootstrap.min.js') }}"></script>
     <script src="{{ asset('assets/JS/plugins/jQuery.js') }}"></script>
     <script src="{{ asset('assets/JS/global.js') }}"></script>
 
-</body>
+    <script>
+        const ALL_COMPLAINTS = @json($complaints->groupBy('patient_id'));
 
+        function openComplaintsPopup(patientId) {
+            const data    = ALL_COMPLAINTS[patientId] || [];
+            const content = document.getElementById('complaints-content');
+
+            if (data.length === 0) {
+                content.innerHTML = '<p class="text-muted">No complaints for this patient.</p>';
+            } else {
+                content.innerHTML = data.map(c => `
+                    <div class="complaint-item">
+                        <i class="fa-solid fa-circle-dot"></i>
+                        <div>
+                            <span class="complaint-category">${c.category ?? ''}</span>
+                            <p class="complaint-desc">${c.description}</p>
+                            <span class="complaint-status ${c.status}">${c.status.replace('_', ' ')}</span>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            document.getElementById('complaintsPopup').style.display = 'flex';
+        }
+    </script>
+
+</body>
 </html>

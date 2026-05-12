@@ -120,14 +120,12 @@ class PatientsController extends Controller
 
     public function adminIndex()
     {
-        $patients = Patient::with(['therapist', 'sessions'])
-            ->latest()
-            ->paginate(20);
+        $patients = Patient::all();
         $therapists = Therapist::all();
+        $complaints = \App\Models\Complaint::with('patient')->orderByDesc('created_at')->get();
 
-        return view('admin.users', compact('patients', 'therapists'));
+        return view('admin.users', compact('patients', 'therapists', 'complaints'));
     }
-
     public function destroy(Patient $patient)
     {
         $patient->delete($patient->id);

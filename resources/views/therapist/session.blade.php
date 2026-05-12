@@ -5,11 +5,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>MindCare</title>
-
     <meta name="csrf-token" content="{{ csrf_token() }}" />
     <link rel="shortcut icon" href="{{ asset('assets/Images/favIcon.png') }}" type="image/x-icon">
-
-
     <link rel="stylesheet" href="{{ asset('assets/CSS/plugins/bootstrap.min.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/CSS/plugins/fonts.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/CSS/global.css') }}">
@@ -20,7 +17,8 @@
     <header class="hdr">
         <div class="d-flex align-items-center gap-3">
             <div class="hdr-info">
-                <h2>Session with <span id="doc-name">Dr. {{ $session->therapist->name }}</span></h2>
+                <h2>Session with <span id="doc-name">{{ $session->patient->first_name }}
+                        {{ $session->patient->last_name }}</span></h2>
             </div>
         </div>
         <div class="hdr-right">
@@ -28,13 +26,15 @@
             <span class="hdr-timer" id="dur">00:00</span>
         </div>
     </header>
+
     <div class="main">
         <div class="video-section">
             <div class="video-grid">
+                {{-- Therapist (You) --}}
                 <div class="vid-card">
                     <div class="vid-box speaking" id="vid-self">
                         <div class="vid-avatar av-green" id="av-self">
-                            {{ strtoupper(substr($session->patient->name, 0, 2)) }}
+                            {{ strtoupper(substr($session->therapist->first_name, 0, 1) . substr($session->therapist->last_name, 0, 1)) }}
                         </div>
                         <div class="wave-wrap">
                             <div class="wb"></div>
@@ -44,16 +44,18 @@
                             <div class="wb"></div>
                         </div>
                         <div class="vid-bar">
-                            <span class="vid-bar-name">{{ $session->patient->name }} (You)</span>
+                            <span class="vid-bar-name">Dr. {{ $session->therapist->first_name }}
+                                {{ $session->therapist->last_name }} (You)</span>
                             <span class="mute-pill" id="mute-pill" style="display:none;">Muted</span>
                         </div>
                     </div>
                     <span class="vid-name">You</span>
                 </div>
+                {{-- Patient --}}
                 <div class="vid-card">
                     <div class="vid-box" id="vid-patient">
                         <div class="vid-avatar av-warm">
-                            {{ strtoupper(substr($session->therapist->name, 0, 2)) }}
+                            {{ strtoupper(substr($session->patient->first_name, 0, 1) . substr($session->patient->last_name, 0, 1)) }}
                         </div>
                         <div class="wave-wrap">
                             <div class="wb"></div>
@@ -63,12 +65,15 @@
                             <div class="wb"></div>
                         </div>
                         <div class="vid-bar">
-                            <span class="vid-bar-name">Dr. {{ $session->therapist->name }}</span>
+                            <span class="vid-bar-name">{{ $session->patient->first_name }}
+                                {{ $session->patient->last_name }}</span>
                         </div>
                     </div>
-                    <span class="vid-name">Dr. {{ $session->therapist->name }}</span>
+                    <span class="vid-name">{{ $session->patient->first_name }}
+                        {{ $session->patient->last_name }}</span>
                 </div>
             </div>
+
             <div class="controls">
                 <button class="ctrl" id="btn-mic" title="Mute" onclick="toggleMic()">
                     <svg viewBox="0 0 24 24">
@@ -101,6 +106,7 @@
                 </button>
             </div>
         </div>
+
         <div class="side">
             <div class="tabs">
                 <button class="tab-btn on" id="tab-notes" onclick="switchTab('notes')">Session Notes</button>
@@ -115,44 +121,32 @@
                 </div>
             </div>
             <div class="panel" id="panel-chat">
-                <div class="chat-body" id="chat-msgs">
-                    @foreach ($session->chatMessages as $msg)
-                        @php
-                            $isMine = $msg->sender_type === 'patient' && $msg->sender_id === $session->patient_id;
-                        @endphp
-                        <div class="msg {{ $isMine ? 'mine' : '' }}" data-msg-id="{{ $msg->id }}">
-                            <span class="msg-who">
-                                {{ $isMine ? 'You' : 'Dr. ' . $session->therapist->name }}
-                            </span>
-                            <div class="bubble">{{ $msg->message }}</div>
-                        </div>
-                    @endforeach
-                </div>
+                <div class="chat-body" id="chat-msgs"></div>
                 <div class="chat-footer">
-                    <input type="text" id="chat-in" placeholder="Message Dr. {{ $session->therapist->name }}…"
+                    <input type="text" id="chat-in" placeholder="Message {{ $session->patient->first_name }}…"
                         onkeydown="if(event.key==='Enter') sendMsg()" />
                     <button class="send-btn" onclick="sendMsg()">↑</button>
                 </div>
             </div>
         </div>
     </div>
+
     <div class="loadingPage">
         <div class="loader"></div>
     </div>
     <script src="{{ asset('assets/JS/plugins/bootstrap.min.js') }}"></script>
     <script src="{{ asset('assets/JS/plugins/jQuery.js') }}"></script>
     <script src="{{ asset('assets/JS/global.js') }}"></script>
-
     <script>
         const SESSION_ID = {{ $session->id }};
         const CSRF_TOKEN = document.querySelector('meta[name="csrf-token"]').content;
         const ROUTES = {
-            chat: `/sessions/${SESSION_ID}/chat`,
+            chat: `/therapist/sessions/${SESSION_ID}/chat`,
             mute: `/sessions/${SESSION_ID}/mute`,
-            notes: `/patient/sessions/${SESSION_ID}/notes`,
-            leave: `/patient/sessions/${SESSION_ID}/leave`,
+            notes: `/therapist/sessions/${SESSION_ID}/notes`,
+            leave: `/therapist/sessions/${SESSION_ID}/leave`,
         };
-        let lastMsgId = {{ $session->chatMessages->last()?->id ?? 0 }};
+        let lastMsgId = 0;
 
         function csrfFetch(url, options = {}) {
             return fetch(url, {
@@ -160,9 +154,9 @@
                     'Content-Type': 'application/json',
                     'X-CSRF-TOKEN': CSRF_TOKEN,
                     'Accept': 'application/json',
-                    ...options.headers,
+                    ...options.headers
                 },
-                ...options,
+                ...options
             });
         }
         var start = Date.now();
@@ -177,12 +171,12 @@
         }
         tick();
         setInterval(tick, 1000);
-        var selfSpeaking = true;
-        var isMuted = false;
+        var selfSpeaking = true,
+            isMuted = false;
 
         function toggleSpeaker() {
-            var selfBox = document.getElementById('vid-self');
-            var patientBox = document.getElementById('vid-patient');
+            var selfBox = document.getElementById('vid-self'),
+                patientBox = document.getElementById('vid-patient');
             if (isMuted) {
                 selfBox.classList.remove('speaking');
                 patientBox.classList.toggle('speaking');
@@ -195,9 +189,9 @@
         setInterval(toggleSpeaker, 4200);
 
         function toggleMic() {
-            var btn = document.getElementById('btn-mic');
-            var box = document.getElementById('vid-self');
-            var mutePill = document.getElementById('mute-pill');
+            var btn = document.getElementById('btn-mic'),
+                box = document.getElementById('vid-self'),
+                mutePill = document.getElementById('mute-pill');
             btn.classList.toggle('off');
             isMuted = btn.classList.contains('off');
             btn.title = isMuted ? 'Unmute' : 'Mute';
@@ -205,9 +199,8 @@
             mutePill.style.display = isMuted ? 'inline-flex' : 'none';
             if (isMuted) box.classList.remove('speaking');
             csrfFetch(ROUTES.mute, {
-                    method: 'POST'
-                })
-                .catch(err => console.error('Mute error:', err));
+                method: 'POST'
+            }).catch(err => console.error('Mute error:', err));
         }
 
         function switchTab(t) {
@@ -227,19 +220,18 @@
             is_mine,
             id
         }) {
-            var msgs = document.getElementById('chat-msgs');
-            var d = document.createElement('div');
+            var msgs = document.getElementById('chat-msgs'),
+                d = document.createElement('div');
             d.className = 'msg' + (is_mine ? ' mine' : '');
             if (id) d.dataset.msgId = id;
-            d.innerHTML = `<span class="msg-who">${sender_name}</span>
-                        <div class="bubble">${escapeHtml(message)}</div>`;
+            d.innerHTML = `<span class="msg-who">${sender_name}</span><div class="bubble">${escapeHtml(message)}</div>`;
             msgs.appendChild(d);
             msgs.scrollTop = msgs.scrollHeight;
         }
 
         function sendMsg() {
-            var inp = document.getElementById('chat-in');
-            var txt = inp.value.trim();
+            var inp = document.getElementById('chat-in'),
+                txt = inp.value.trim();
             if (!txt) return;
             appendMessage({
                 sender_name: 'You',
@@ -251,10 +243,9 @@
                     method: 'POST',
                     body: JSON.stringify({
                         message: txt
-                    }),
+                    })
                 })
-                .then(r => r.json())
-                .then(data => {
+                .then(r => r.json()).then(data => {
                     if (data.success) lastMsgId = data.chat.id;
                 })
                 .catch(err => console.error('Chat error:', err));
@@ -262,32 +253,27 @@
 
         function pollMessages() {
             csrfFetch(`${ROUTES.chat}?after_id=${lastMsgId}`)
-                .then(r => r.json())
-                .then(data => {
+                .then(r => r.json()).then(data => {
                     data.messages.forEach(msg => {
-                        if (!msg.is_mine) {
-                            appendMessage(msg);
-                        }
+                        if (!msg.is_mine) appendMessage(msg);
                         if (msg.id > lastMsgId) lastMsgId = msg.id;
                     });
-                })
-                .catch(err => console.error('Poll error:', err));
+                }).catch(err => console.error('Poll error:', err));
         }
         setInterval(pollMessages, 3000);
 
         function saveNotes() {
-            var notes = document.getElementById('notes-area').value;
-            var msg = document.getElementById('notes-msg');
+            var notes = document.getElementById('notes-area').value,
+                msg = document.getElementById('notes-msg');
             msg.textContent = 'Saving…';
             msg.style.color = 'var(--muted)';
             csrfFetch(ROUTES.notes, {
                     method: 'POST',
                     body: JSON.stringify({
-                        notes: notes
-                    }),
+                        notes
+                    })
                 })
-                .then(r => r.json())
-                .then(data => {
+                .then(r => r.json()).then(data => {
                     msg.textContent = data.success ? '✓ Saved' : '✗ Error';
                     msg.style.color = data.success ? 'green' : 'red';
                     setTimeout(() => msg.textContent = '', 3000);
@@ -300,19 +286,17 @@
         setInterval(saveNotes, 60000);
 
         function confirmEnd() {
-            if (!confirm('End session with Dr. {{ $session->therapist->name }}?')) return;
-
+            if (!confirm('End session with {{ $session->patient->first_name }} {{ $session->patient->last_name }}?'))
+                return;
             csrfFetch(ROUTES.leave, {
                     method: 'POST'
                 })
-                .then(r => r.json())
-                .then(data => {
+                .then(r => r.json()).then(data => {
                     window.location.href = data.redirect || '/';
                 })
                 .catch(() => window.location.href = '/');
         }
     </script>
-
 </body>
 
 </html>

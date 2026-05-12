@@ -23,24 +23,40 @@
             <h2 class="title mb-5 fs-1">Complaints & Support Center</h2>
             <div class="box">
                 <h3 class="mb-4 fs-2">Submit Complaint</h3>
-                <form action="">
+                <form action="{{ route('patient.complaints.store') }}" method="POST">
+                    @csrf
+
+                    @if (session('success'))
+                        <div class="alert alert-success mb-3">{{ session('success') }}</div>
+                    @endif
+
+                    @if ($errors->any())
+                        <div class="alert alert-danger mb-3">
+                            @foreach ($errors->all() as $error)
+                                <div>{{ $error }}</div>
+                            @endforeach
+                        </div>
+                    @endif
+
                     <div class="">
                         <label for="Category" class="w-100 mb-2">Complaint Category</label>
                         <select name="category" id="Category" class="mb-2">
-                            <option>Technical Issue</option>
-                            <option>Therapist Behavior</option>
-                            <option>Patient Misconduct</option>
-                            <option>Session Issue</option>
-                            <option>Privacy Concern</option>
-                            <option>Emergency Report</option>
+                            <option value="Technical Issue">Technical Issue</option>
+                            <option value="Therapist Behavior">Therapist Behavior</option>
+                            <option value="Patient Misconduct">Patient Misconduct</option>
+                            <option value="Session Issue">Session Issue</option>
+                            <option value="Privacy Concern">Privacy Concern</option>
+                            <option value="Emergency Report">Emergency Report</option>
                         </select>
                     </div>
+
                     <div class="">
                         <label for="Complaint" class="w-100 mb-2">Detailed Description</label>
-                        <textarea class="form-control" name="complaint" id="Complaint" rows="5"
-                            placeholder="Please describe the issue clearly..."></textarea>
+                        <textarea class="form-control" name="description" id="Complaint" rows="5"
+                            placeholder="Please describe the issue clearly...">{{ old('description') }}</textarea>
                     </div>
-                    <button class="btn">Submit</button>
+
+                    <button class="btn" type="submit">Submit</button>
                 </form>
             </div>
         </div>

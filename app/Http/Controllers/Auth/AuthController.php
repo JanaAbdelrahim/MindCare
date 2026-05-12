@@ -12,7 +12,7 @@ class AuthController extends Controller
 {
     public function showLogin()
     {
-        // Redirect already-authenticated users away from the login page
+        
         if (Auth::guard('patient')->check()) {
             return redirect()->route('patient.profile');
         }

@@ -64,7 +64,7 @@ class PaymentsController extends Controller
 
         $session->update(['status' => 'scheduled']);
 
-        return redirect()->route('patient.waiting-room', $session->id)
+        return redirect()->route('patient.waitingRoom', $session->id)
             ->with('success', 'Payment successful. Session confirmed!');
     }
 }

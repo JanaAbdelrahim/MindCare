@@ -10,8 +10,14 @@ h6 {
 body {
     background-color: #F8EFE5;
     font-family: "Roboto", sans-serif;
+    min-height: 100vh;
+      display: flex;
+    flex-direction: column;
 }
 
+main {
+    flex: 1;
+}
 body::-webkit-scrollbar {
     background: rgb(35, 58, 78);
     width: 13px;
@@ -53,7 +59,7 @@ body::-webkit-scrollbar-thumb {
     }
 }
 
-.popUp.notifications {
+.popUp {
     position: fixed;
     top: 0;
     right: initial;
@@ -72,7 +78,7 @@ body::-webkit-scrollbar-thumb {
     display: none;
 }
 
-.popUp.notifications .box {
+.popUp .box {
     background-color: #FDFCFA;
     background-color: rgba(93, 118, 139, 0.7333333333);
     -webkit-backdrop-filter: blur(10px);
@@ -85,18 +91,18 @@ body::-webkit-scrollbar-thumb {
 }
 
 @media (max-width: 1300px) {
-    .popUp.notifications .box {
+    .popUp .box {
         width: 280px;
     }
 }
 
 @media (min-width: 577px) and (max-width: 1300px) {
-    .popUp.notifications .box {
+    .popUp .box {
         width: 350px;
     }
 }
 
-.popUp.notifications .box i.close {
+.popUp .box i.close {
     position: absolute;
     top: 12px;
     right: 15px;
@@ -107,27 +113,27 @@ body::-webkit-scrollbar-thumb {
     cursor: pointer;
 }
 
-.popUp.notifications .box .title {
+.popUp .box .title {
     text-align: center;
     margin-block: 8px 25px;
     text-shadow: #d9f3f2 1px 0 10px;
 }
 
-.popUp.notifications .box .patient i {
+.popUp .box .patient i {
     color: #efd6ba;
     margin-right: 8px;
 }
 
-.popUp.notifications .box .patient h4 {
+.popUp .box .patient h4 {
     margin-block: 5px;
     font-style: italic;
 }
 
-.popUp.notifications .box .patient p {
+.popUp .box .patient p {
     color: #d2d2d2;
 }
 
-.popUp.notifications .box hr {
+.popUp .box hr {
     color: #fff;
 }
 
@@ -229,6 +235,8 @@ body::-webkit-scrollbar-thumb {
     background: #1E2D3A;
     padding: 14px 0 5px;
     color: rgb(248, 246, 243);
+    position: relative;
+    bottom: 0;
 }
 
 .footer-bottom .container {

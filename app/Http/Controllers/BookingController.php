@@ -14,26 +14,21 @@ class BookingController extends Controller
 {
     public function getTherapistWithSlots(Request $request)
     {
-        
         $request->validate([
             'therapist_id' => 'required|exists:therapists,id',
         ]);
 
-        $therapist = Therapist::select('id', 'first_name', 'last_name', 'specialization', 'language', 'rating', 'session_fee')
-            ->find($request->therapist_id);
+        $therapist = Therapist::select('id', 'first_name', 'last_name', 'specialization', 'language', 'rating', 'session_fee')->find($request->therapist_id);
 
         if (!$therapist) {
             return response()->json(['message' => 'Therapist not found'], 404);
         }
 
-        $slots = AvailabilitySlot::where('therapist_id', $request->therapist_id)
-            ->where('status', 'available')
-            ->select('id', 'start_time', 'end_time', 'status')
-            ->get();
+        $slots = AvailabilitySlot::where('therapist_id', $request->therapist_id)->where('status', 'available')->select('id', 'start_time', 'end_time', 'status')->get();
 
         return response()->json([
             'therapist' => $therapist,
-            'slots'     => $slots,
+            'slots' => $slots,
         ]);
     }
 
@@ -43,9 +38,7 @@ class BookingController extends Controller
             'therapist_id' => 'required|exists:therapists,id',
         ]);
 
-        $slots = AvailabilitySlot::where('therapist_id', $request->therapist_id)
-            ->where('status', 'available')
-            ->get();
+        $slots = AvailabilitySlot::where('therapist_id', $request->therapist_id)->where('status', 'available')->get();
 
         $booked = PatientSession::where('therapist_id', $request->therapist_id)
             ->whereDate('session_time', today())
@@ -54,9 +47,7 @@ class BookingController extends Controller
             ->map(fn($d) => Carbon::parse($d)->format('H:i'))
             ->toArray();
 
-        $available = $slots->filter(
-            fn($slot) => !in_array(Carbon::parse($slot->start_time)->format('H:i'), $booked)
-        )->values();
+        $available = $slots->filter(fn($slot) => !in_array(Carbon::parse($slot->start_time)->format('H:i'), $booked))->values();
 
         return response()->json(['available_now' => $available]);
     }
@@ -64,12 +55,14 @@ class BookingController extends Controller
     public function index()
     {
         /** @var \App\Models\Patient $patient */
-        $patient = auth()->guard('patient')->user()->load(['therapist']);
+        $patient = auth()
+            ->guard('patient')
+            ->user()
+            ->load(['therapist']);
 
         // If the patient hasn't selected a therapist yet, send them back to matching
         if (!$patient->therapist_id) {
-            return redirect()->route('patient.matching')
-                ->with('info', 'Please select a therapist first.');
+            return redirect()->route('patient.matching')->with('info', 'Please select a therapist first.');
         }
 
         $therapist = $patient->therapist;
@@ -80,20 +73,23 @@ class BookingController extends Controller
             ->get(['id', 'start_time', 'end_time']);
 
         // Format slots for JS
-        $slotsData = $slots->map(fn($s) => [
-            'id'    => $s->id,
-            'label' => Carbon::parse($s->start_time)->format('D g:i A') .
-                    ' – ' .
-                    Carbon::parse($s->end_time)->format('g:i A'),
-            'datetime' => $s->start_time,
-        ])->values()->all();
+        $slotsData = $slots
+            ->map(
+                fn($s) => [
+                    'id' => $s->id,
+                    'label' => Carbon::parse($s->start_time)->format('D g:i A') . ' – ' . Carbon::parse($s->end_time)->format('g:i A'),
+                    'datetime' => $s->start_time,
+                ],
+            )
+            ->values()
+            ->all();
 
         $therapistData = [
-            'id'       => $therapist->id,
-            'name'     => 'Dr. ' . $therapist->first_name . ' ' . $therapist->last_name,
-            'specialty'=> $therapist->specialization ?? 'Therapist',
+            'id' => $therapist->id,
+            'name' => 'Dr. ' . $therapist->first_name . ' ' . $therapist->last_name,
+            'specialty' => $therapist->specialization ?? 'Therapist',
             'language' => $therapist->language ?? '',
-            'price'    => $therapist->session_fee ?? 0,
+            'price' => $therapist->session_fee ?? 0,
             'currency' => 'EGP',
             'initials' => strtoupper(substr($therapist->first_name, 0, 1) . substr($therapist->last_name, 0, 1)),
         ];
@@ -105,14 +101,11 @@ class BookingController extends Controller
     {
         $request->validate([
             'therapist_id' => 'required|exists:therapists,id',
-            'slot_id'      => 'required|exists:availability_slots,id',
+            'slot_id' => 'required|exists:availability_slots,id',
             'session_time' => 'required|date|after:now',
         ]);
 
-        $slot = AvailabilitySlot::where('id', $request->slot_id)
-            ->where('therapist_id', $request->therapist_id)
-            ->where('status', 'available')
-            ->first();
+        $slot = AvailabilitySlot::where('id', $request->slot_id)->where('therapist_id', $request->therapist_id)->where('status', 'available')->first();
 
         if (!$slot) {
             return response()->json(['message' => 'Invalid or unavailable slot'], 422);
@@ -128,26 +121,29 @@ class BookingController extends Controller
         }
 
         $session = PatientSession::create([
-            'patient_id'   => auth()->guard('patient')->id(),
+            'patient_id' => auth()->guard('patient')->id(),
             'therapist_id' => $request->therapist_id,
             'session_time' => $request->session_time,
-            'status'       => 'pending',
+            'status' => 'pending',
         ]);
 
         $slot->update(['status' => 'booked', 'session_id' => $session->id]);
 
-        return response()->json([
-            'message' => 'Booked successfully',
-            'session' => $session,
-        ], 201);
+        return response()->json(
+            [
+                'message' => 'Booked successfully',
+                'session' => $session, 
+            ],
+            201,
+        );
     }
 
     public function pay(Request $request)
     {
         $request->validate([
             'session_id' => 'required|exists:patient_sessions,id',
-            'amount'     => 'required|numeric|min:1',
-            'method'     => 'required|in:credit_card,wallet',
+            'amount' => 'required|numeric|min:1',
+            'method' => 'required|in:credit_card,wallet',
         ]);
 
         $session = PatientSession::where('id', $request->session_id)
@@ -158,28 +154,29 @@ class BookingController extends Controller
             return response()->json(['message' => 'Session not found'], 403);
         }
 
-        $paid = Payment::where('session_id', $request->session_id)
-            ->where('status', 'completed')
-            ->exists();
+        $paid = Payment::where('session_id', $request->session_id)->where('status', 'completed')->exists();
 
         if ($paid) {
             return response()->json(['message' => 'Already paid'], 422);
         }
 
         $payment = Payment::create([
-            'patient_id'     => auth()->guard('patient')->id(),
-            'therapist_id'   => $session->therapist_id,
-            'session_id'     => $request->session_id,
-            'amount'         => $request->amount,
-            'status'         => 'completed',
+            'patient_id' => auth()->guard('patient')->id(),
+            'therapist_id' => $session->therapist_id,
+            'session_id' => $request->session_id,
+            'amount' => $request->amount,
+            'status' => 'completed',
             'payment_method' => $request->method,
             'transaction_id' => 'TXN_' . uniqid(),
         ]);
 
-        return response()->json([
-            'message' => 'Payment successful',
-            'payment' => $payment,
-        ], 201);
+        return response()->json(
+            [
+                'message' => 'Payment successful',
+                'payment' => $payment,
+            ],
+            201,
+        );
     }
 
     public function cancel(Request $request, $id)
@@ -199,8 +196,7 @@ class BookingController extends Controller
         $session->update(['status' => 'canceled']);
 
         // Free up the slot
-        AvailabilitySlot::where('session_id', $session->id)
-            ->update(['status' => 'available', 'session_id' => null]);
+        AvailabilitySlot::where('session_id', $session->id)->update(['status' => 'available', 'session_id' => null]);
 
         return response()->json(['message' => 'Canceled successfully']);
     }

@@ -8,51 +8,52 @@ use Illuminate\Http\Request;
 class NotificationsController extends Controller
 {
 
-    public function index()
-    {
-    
-        if (auth()->guard('patient')->check()) {
-            $userId   = auth()->guard('patient')->id();
-            $userType = 'patient';
-        } elseif (auth()->guard('therapist')->check()) {
-            $userId   = auth()->guard('therapist')->id();
-            $userType = 'therapist';
-        } else {
-            abort(403);
-        }
-
-        $notifications = Notification::query()->where('user_type', $userType)
-            ->where(function ($q) use ($userId, $userType) {
-                if ($userType === 'patient') {
-                    $q->where('patient_id', $userId);
-                } else {
-                    $q->where('therapist_id', $userId);
-                }
-            })
-            ->orderByDesc('created_at')
-            ->get();
-
-        return view('shared.notifications', compact('notifications'));
+public function fetch()
+{
+    if (auth()->guard('patient')->check()) {
+        $userId   = auth()->guard('patient')->id();
+        $userType = 'patient';
+    } elseif (auth()->guard('therapist')->check()) {
+        $userId   = auth()->guard('therapist')->id();
+        $userType = 'therapist';
+    } else {
+        return response()->json([], 403);
     }
 
-    /**
-     * Mark a notification as read.
-     */
-    public function markRead($id)
-    {
-        $notification = Notification::findOrFail($id);
-        $notification->update(['is_read' => true]);
+    $notifications = Notification::where('user_type', $userType)
+        ->where(function ($q) use ($userId, $userType) {
+            if ($userType === 'patient') {
+                $q->where('patient_id', $userId);
+            } else {
+                $q->where('therapist_id', $userId);
+            }
+        })
+        ->orderByDesc('created_at')
+        ->get(['id', 'message', 'is_read', 'created_at']);
 
-        return redirect()->back()->with('success', 'Notification marked as read.');
+    return response()->json($notifications);
+}
+
+public function fetchAdmin()
+{
+    if (!session('admin_logged_in')) {
+        return response()->json([], 403);
     }
 
-   
-    public function adminIndex()
-    {
-        $notifications = Notification::with(['patient', 'therapist'])
-            ->orderByDesc('created_at')
-            ->get();
+    // Active sessions
+    $activeSessions = \App\Models\PatientSession::with(['patient', 'therapist'])
+        ->where('status', 'scheduled')
+        ->where('session_time', '>=', now()->subHours(2))
+        ->where('session_time', '<=', now()->addHours(2))
+        ->get()
+        ->map(fn($s) => [
+            'id'      => $s->id,
+            'message' => 'Active session: Dr. ' . $s->therapist->first_name . ' ' . $s->therapist->last_name .
+                        ' with ' . $s->patient->first_name . ' ' . $s->patient->last_name .
+                        ' at ' . \Carbon\Carbon::parse($s->session_time)->format('g:i A'),
+            'is_read' => false,
+        ]);
 
-        return view('admin.notifications', compact('notifications'));
-    }
+    return response()->json($activeSessions);
+}
 }

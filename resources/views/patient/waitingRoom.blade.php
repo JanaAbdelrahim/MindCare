@@ -66,7 +66,7 @@
                     <div>relax and meditate until the session begins</div>
                 </div>
 
-                <button class="btn-join" onclick="window.location.href='session.html'">
+                <button class="btn-join" onclick="window.location.href='{{ route('patient.session', $session) }}'">
                     Join When Ready →
                 </button>
 

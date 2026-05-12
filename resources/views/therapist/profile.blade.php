@@ -61,11 +61,11 @@
                                     <label for="Password" class="input-label text-start mb-2">
                                         New Password <small class="text-muted">(leave blank to keep current)</small>
                                     </label>
-                                    <input type="password" name="password" id="Password" class="form-control" placeholder="Min 8 characters">
+                                    <input type="password" name="password" id="Password" class="form-control" placeholder="••••••••">
                                 </div>
                                 <div class="mt-3">
                                     <label for="PasswordConfirm" class="input-label text-start mb-2">Confirm Password</label>
-                                    <input type="password" name="password_confirmation" id="PasswordConfirm" class="form-control">
+                                    <input type="password" name="password_confirmation"  placeholder="••••••••" id="PasswordConfirm" class="form-control">
                                 </div>
                                 <div class="mt-4 btns">
                                     <button type="submit" class="btn w-100">Edit</button>
@@ -117,8 +117,8 @@
                                             <div class="info">
                                                 <h5>{{ $session->patient->first_name }} {{ $session->patient->last_name }}</h5>
                                                 <p>
-                                                    {{ $session->session_time->format('g:i A') }} 路
-                                                    50 min 路 Video 路
+                                                    {{ $session->session_time->format('g:i A') }} | 
+                                                    50 min | Video 
                                                     {{ ucfirst($session->patient->condition_level ?? 'General') }}
                                                 </p>
                                             </div>
@@ -145,7 +145,7 @@
                         {{ $patient->first_name }} {{ $patient->last_name }}
                     </h4>
                     <p>
-                        {{ $patient->session_count }} sessions 路
+                        {{ $patient->session_count }} sessions 
                         {{ ucfirst($patient->condition_level ?? 'General') }}
                     </p>
                 </div>

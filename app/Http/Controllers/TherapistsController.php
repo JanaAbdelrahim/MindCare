@@ -1,7 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Models\Report;
+use App\Models\IntakeForm;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
@@ -11,7 +12,6 @@ use App\Models\PatientSession;
 
 class TherapistsController extends Controller
 {
-    
     public function profile()
     {
         /** @var Therapist $therapist */
@@ -19,7 +19,6 @@ class TherapistsController extends Controller
             ->guard('therapist')
             ->user()
             ->load(['sessions.patient']);
-
         $name = $therapist->first_name . ' ' . $therapist->last_name;
         $avgRating = $this->getAvgRating($therapist);
         $todaySessions = $this->getTodaySessions($therapist);
@@ -91,6 +90,7 @@ class TherapistsController extends Controller
         $patients = Patient::whereHas('sessions', function ($q) use ($therapist) {
             $q->where('therapist_id', $therapist->id);
         })
+
             ->with([
                 'sessions' => function ($q) use ($therapist) {
                     $q->where('therapist_id', $therapist->id)->orderBy('session_time', 'desc');
@@ -114,7 +114,17 @@ class TherapistsController extends Controller
 
         $patient->load(['sessions', 'wellnessRecords', 'goals', 'intakeForm']);
 
-        return view('therapist.reports', compact('patient', 'therapist'));
+        // كانت بتبعت patient و therapist بس — الـ view بيحتاج reports و patients و intakeForms
+        $reports = Report::where('patient_id', $patient->id)
+            ->where('therapist_id', $therapist->id)
+            ->with(['patient', 'intakeForm'])
+            ->orderByDesc('created_at')
+            ->get();
+
+        $patients = collect([$patient]); // لو الـ view بيعرض patient واحد بس
+        $intakeForms = IntakeForm::where('patient_id', $patient->id)->get();
+
+        return view('therapist.reports', compact('reports', 'patients', 'intakeForms'));
     }
 
     public function adminDashboard()
@@ -128,8 +138,6 @@ class TherapistsController extends Controller
             ->latest()
             ->take(5)
             ->get();
-
-        return view('admin.dashboard', compact('totalTherapists', 'totalPatients', 'totalSessions', 'recentTherapists', 'recentSessions'));
 
         return view('admin.dashboard', compact('totalTherapists', 'totalPatients', 'totalSessions', 'recentTherapists', 'recentSessions'));
     }

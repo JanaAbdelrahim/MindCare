@@ -1,8 +1,8 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// booking.js  —  uses BOOKING_DATA injected by booking.blade.php
+// booking.js — uses BOOKING_DATA injected by booking.blade.php
 // ─────────────────────────────────────────────────────────────────────────────
 
-let selectedSlot = null;   // { id, label, datetime }
+let selectedSlot = null; // { id, label, datetime }
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 function showError(msg) {
@@ -22,13 +22,13 @@ function showSuccess(msg) {
 
 // ── Render doctor card ────────────────────────────────────────────────────────
 function renderDoctor(t) {
-    document.getElementById('doc-avatar').textContent   = t.initials;
-    document.getElementById('doc-name').textContent     = t.name;
+    document.getElementById('doc-avatar').textContent    = t.initials;
+    document.getElementById('doc-name').textContent      = t.name;
     document.getElementById('doc-specialty').textContent = t.specialty +
-        (t.language ? '  ·  ' + t.language : '');
-    document.getElementById('doc-price').textContent    =
+        (t.language ? ' · ' + t.language : '');
+    document.getElementById('doc-price').textContent     =
         'Session price: ' + t.price + ' ' + t.currency;
-    document.getElementById('sel-price').textContent    =
+    document.getElementById('sel-price').textContent     =
         t.price + ' ' + t.currency;
 }
 
@@ -47,14 +47,12 @@ function renderSlots(slots) {
     }
 
     slots.forEach(s => {
-        // All-slots column (static, read-only)
-        const staticEl = document.createElement('div');
+        const staticEl       = document.createElement('div');
         staticEl.className   = 'slot static';
         staticEl.textContent = s.label;
         allGrid.appendChild(staticEl);
 
-        // Available-slots column (clickable)
-        const availEl = document.createElement('div');
+        const availEl       = document.createElement('div');
         availEl.className   = 'slot available';
         availEl.textContent = s.label;
         availEl.onclick     = () => selectSlot(availEl, s);
@@ -73,16 +71,16 @@ function selectSlot(el, slot) {
     document.getElementById('sel-label').textContent       = slot.label;
     document.getElementById('selected-info').style.display = 'flex';
 
-    const btn = document.getElementById('proceed-btn');
-    btn.disabled    = false;
-    btn.textContent = 'Confirm Booking →';
+    const btn         = document.getElementById('proceed-btn');
+    btn.disabled      = false;
+    btn.textContent   = 'Confirm Booking →';
 }
 
-// ── Submit booking to backend ─────────────────────────────────────────────────
+// ── Submit booking ────────────────────────────────────────────────────────────
 async function submitBooking() {
     if (!selectedSlot) return;
 
-    const btn = document.getElementById('proceed-btn');
+    const btn       = document.getElementById('proceed-btn');
     btn.disabled    = true;
     btn.textContent = 'Booking…';
 
@@ -91,8 +89,8 @@ async function submitBooking() {
             method:  'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Accept':        'application/json',
-                'X-CSRF-TOKEN':  CSRF_TOKEN,
+                'Accept':       'application/json',
+                'X-CSRF-TOKEN': CSRF_TOKEN,
             },
             body: JSON.stringify({
                 therapist_id: BOOKING_DATA.therapist.id,
@@ -110,18 +108,13 @@ async function submitBooking() {
             return;
         }
 
-        // ── success ──────────────────────────────────────────────────────────
-        showSuccess('Session booked successfully! 🎉');
+        // ── success: redirect to payment ──────────────────────────────────────
+        showSuccess('Session booked! Redirecting to payment… 💳');
         btn.textContent = '✓ Booked';
 
-        // Remove the slot from the UI so it can't be double-booked
-        document.querySelectorAll('#avail-slots .slot.selected').forEach(e => e.remove());
-        document.querySelectorAll('#all-slots .slot').forEach(e => {
-            if (e.textContent === selectedSlot.label) e.className = 'slot static booked';
-        });
-
-        selectedSlot = null;
-        document.getElementById('selected-info').style.display = 'none';
+        setTimeout(() => {
+            window.location.href = '/patient/payment/' + data.session.id;
+        }, 1200);
 
     } catch (err) {
         showError('Network error. Please check your connection and try again.');

@@ -23,7 +23,7 @@ body {
 
 .left-side {
     flex: 1;
-    background-image: url('photo-1518531933037-91b2f5f229cc.avif'); /* استبدلها برابط صورتك */
+    background-image: url('/assets/Images/waiting.avif');
     background-size: cover;
     background-position: center;
     display: flex;

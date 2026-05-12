@@ -7,7 +7,6 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\Patient;
 use App\Models\IntakeForm;
 
-
 class ReportsController extends Controller
 {
     // ─────────────────────────────────────────────────────────────────────────
@@ -20,32 +19,19 @@ class ReportsController extends Controller
      */
     public function index()
     {
-        /** @var \App\Models\Therapist $therapist */
         $therapist = auth()->guard('therapist')->user();
 
         $reports = Report::query()
             ->where('therapist_id', $therapist->id)
-            ->with(['patient', 'intakeForm']) // Eager load to prevent N+1
+            ->with(['patient', 'intakeForm'])
             ->orderByDesc('created_at')
             ->get();
 
         $patients = Patient::all();
         $intakeForms = IntakeForm::all();
-        $reports = Report::query()
-        ->where('therapist_id', $therapist->id)
-        ->with(['patient', 'intakeForm'])
-        ->orderByDesc('created_at')
-        ->get();
-    
 
-        return view('therapist.reports', compact(
-            'reports',
-            'patients', 
-            'reports', 
-             'intakeForms'
-        ));
+        return view('therapist.reports', compact('reports', 'patients', 'intakeForms'));
     }
-
     // ─────────────────────────────────────────────────────────────────────────
     // CREATE REPORT
     // ─────────────────────────────────────────────────────────────────────────
@@ -62,53 +48,30 @@ class ReportsController extends Controller
         $therapist = auth()->guard('therapist')->user();
 
         $request->validate([
-            'patient_id'                 => ['required', 'exists:patients,id'],
-            'intake_form_id'             => ['required', 'exists:intake_forms,id'],
-            'total_score'                => ['required', 'integer', 'min:0'],
-            'condition_level'            => ['required', 'in:low,medium,high,severe'],
+            'patient_id' => ['required', 'exists:patients,id'],
+            'intake_form_id' => ['required', 'exists:intake_forms,id'],
+            'total_score' => ['required', 'integer', 'min:0'],
+            'condition_level' => ['required', 'in:low,medium,high,severe'],
             'recommended_specialization' => ['nullable', 'string', 'max:255'],
-            'notes'                      => ['nullable', 'string', 'max:5000'],
+            'notes' => ['nullable', 'string', 'max:5000'],
         ]);
 
         Report::create([
-            'patient_id'                 => $request->patient_id,
-            'therapist_id'               => $therapist->id, // Set from auth, not request
-            'intake_form_id'             => $request->intake_form_id,
-            'total_score'                => $request->total_score,
-            'condition_level'            => $request->condition_level,
+            'patient_id' => $request->patient_id,
+            'therapist_id' => $therapist->id, // Set from auth, not request
+            'intake_form_id' => $request->intake_form_id,
+            'total_score' => $request->total_score,
+            'condition_level' => $request->condition_level,
             'recommended_specialization' => $request->recommended_specialization,
-            'notes'                      => $request->notes,
+            'notes' => $request->notes,
         ]);
 
-        return redirect()->route('therapist.reports')
-            ->with('success', 'Report created successfully.');
+        return redirect()->route('therapist.reports')->with('success', 'Report created successfully.');
     }
 
     // ─────────────────────────────────────────────────────────────────────────
     // VIEW REPORT DETAIL
     // ─────────────────────────────────────────────────────────────────────────
-
-    /**
-     * Show a single report's detail page.
-     *
-     * Authorization: only the therapist who created the report can view it.
-     * We use abort(403) instead of a policy for simplicity — suitable for this project size.
-     */
-    public function show(Report $report)
-    {
-        /** @var \App\Models\Therapist $therapist */
-        $therapist = auth()->guard('therapist')->user();
-
-        // Ensure the report belongs to this therapist (authorization check)
-        if ($report->therapist_id !== $therapist->id) {
-            abort(403, 'You are not authorized to view this report.');
-        }
-
-        // Load related data for the detail view
-        $report->load(['patient', 'intakeForm', 'therapist']);
-
-        return view('therapist.report-detail', compact('report'));
-    }
 
     // ─────────────────────────────────────────────────────────────────────────
     // DOWNLOAD REPORT AS PDF
@@ -148,10 +111,22 @@ class ReportsController extends Controller
 
         // Stream the PDF as a download attachment
         // Filename includes patient name and date for easy identification
-        $filename = 'report-' . str_replace(' ', '-', strtolower(
-            $report->patient->first_name . '-' . $report->patient->last_name
-        )) . '-' . $report->created_at->format('Y-m-d') . '.pdf';
+        $filename = 'report-' . str_replace(' ', '-', strtolower($report->patient->first_name . '-' . $report->patient->last_name)) . '-' . $report->created_at->format('Y-m-d') . '.pdf';
 
         return $pdf->download($filename);
     }
+
+public function show(Report $report)
+{
+    /** @var \App\Models\Therapist $therapist */
+    $therapist = auth()->guard('therapist')->user();
+
+    if ($report->therapist_id !== $therapist->id) {
+        abort(403, 'You are not authorized to view this report.');
+    }
+
+    $report->load(['patient', 'therapist', 'intakeForm']);
+
+    return view('therapist.reports', compact('report'));
+}
 }
